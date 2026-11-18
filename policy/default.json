@@ -1,0 +1,7 @@
+{
+  "$comment": "默认策略。业务仓可用 .stdkit/policy.json 覆盖同名键（已实现：loadPolicy）；--profile <name> 加载 policy/profiles/<name>.json。blockOn / warnOn 均为阈值语义（该级及以上）。",
+  "version": 1,
+  "blockOn": ["critical", "high"],
+  "warnOn": ["medium", "low"],
+  "domains": ["java-jdk8", "vue", "sql", "test"]
+}

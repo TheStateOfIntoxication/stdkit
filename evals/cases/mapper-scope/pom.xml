@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <properties>
+    <spring-boot.version>2.3.1.RELEASE</spring-boot.version>
+  </properties>
+  <dependency>
+    <version>${spring-boot.version}</version>
+  </dependency>
+</project>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="com.x.M">
+    <select id="a" resultType="map">
+        SELECT * FROM t
+    </select>
+</mapper>

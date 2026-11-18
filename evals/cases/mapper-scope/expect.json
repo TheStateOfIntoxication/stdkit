@@ -1,0 +1,7 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "J8-MBT-02 只作用于 Mapper XML：pom.xml / logback 的 ${} 不得误报（真实项目实测误报形态）",
+  "findings": [
+    { "ruleId": "J8-MBT-02", "file": "src/main/resources/mapper/mysql/UserMapper.xml", "line": 8 }
+  ]
+}

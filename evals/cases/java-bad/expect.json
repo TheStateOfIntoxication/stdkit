@@ -1,0 +1,13 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "行号期望由人工按规则写死；多规则同命中同一行时各记一条（同一规则只记一次）",
+  "findings": [
+    { "ruleId": "J8-API-04", "file": "src/main/java/com/example/demo/OrderService.java", "line": 8 },
+    { "ruleId": "J8-API-04", "file": "src/main/java/com/example/demo/OrderService.java", "line": 9 },
+    { "ruleId": "J8-API-05", "file": "src/main/java/com/example/demo/OrderService.java", "line": 11 },
+    { "ruleId": "J8-LOG-01", "file": "src/main/java/com/example/demo/OrderService.java", "line": 14 },
+    { "ruleId": "J8-MOD-01", "file": "src/main/java/com/example/demo/OrderService.java", "line": 15 },
+    { "ruleId": "J8-MOD-01", "file": "src/main/java/com/example/demo/OrderService.java", "line": 16 },
+    { "ruleId": "J8-EXC-01", "file": "src/main/java/com/example/demo/OrderService.java", "line": 19 }
+  ]
+}

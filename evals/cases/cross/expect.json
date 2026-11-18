@@ -1,0 +1,8 @@
+{
+  "domain": "sql",
+  "$comment": "仓级回归：只有一个正向脚本、没有同名回滚 → SQL-RBK-01；AGENTS.md 没声明 engines，所以不触发 SQL-DIA-01",
+  "findings": [],
+  "cross": [
+    { "ruleId": "SQL-RBK-01", "file": "sql/upgrade/mysql/001_add.sql" }
+  ]
+}

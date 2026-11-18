@@ -1,0 +1,10 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "P1-1 + C-1 回归：yml / properties 的无引号明文凭证必须命中；行尾注释不得让规则漏报；${...} 占位符不得误报。",
+  "findings": [
+    { "ruleId": "J8-SPR-15", "file": "src/main/resources/application.properties", "line": 2 },
+    { "ruleId": "J8-SPR-15", "file": "src/main/resources/application.properties", "line": 3 },
+    { "ruleId": "J8-SPR-15", "file": "src/main/resources/application.properties", "line": 4 },
+    { "ruleId": "J8-SPR-15", "file": "src/main/resources/application.yml", "line": 4 }
+  ]
+}

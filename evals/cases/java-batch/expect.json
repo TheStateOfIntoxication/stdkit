@@ -1,0 +1,19 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "批量锁定：controller/mapper/service/xml 各一条典型违规，每行对应一条规则",
+  "findings": [
+    { "ruleId": "J8-SPR-01", "file": "src/main/java/com/x/controller/C.java", "line": 4 },
+    { "ruleId": "J8-SPR-02", "file": "src/main/java/com/x/controller/C.java", "line": 5 },
+    { "ruleId": "J8-SPR-05", "file": "src/main/java/com/x/controller/C.java", "line": 6 },
+    { "ruleId": "J8-SPR-07", "file": "src/main/java/com/x/controller/C.java", "line": 11 },
+    { "ruleId": "J8-MBT-01", "file": "src/main/java/com/x/mapper/M.java", "line": 4 },
+    { "ruleId": "J8-MBT-13", "file": "src/main/java/com/x/mapper/M.java", "line": 5 },
+    { "ruleId": "J8-CON-02", "file": "src/main/java/com/x/service/S.java", "line": 4 },
+    { "ruleId": "J8-SEC-01", "file": "src/main/java/com/x/service/S.java", "line": 5 },
+    { "ruleId": "J8-SEC-04", "file": "src/main/java/com/x/service/S.java", "line": 6 },
+    { "ruleId": "J8-SPR-10", "file": "src/main/java/com/x/service/S.java", "line": 7 },
+    { "ruleId": "J8-MBT-11", "file": "src/main/java/com/x/service/S.java", "line": 8 },
+    { "ruleId": "J8-MBT-03", "file": "src/main/resources/mapper/mysql/A.xml", "line": 3 },
+    { "ruleId": "J8-MBT-04", "file": "src/main/resources/mapper/mysql/A.xml", "line": 4 }
+  ]
+}

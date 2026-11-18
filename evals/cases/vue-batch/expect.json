@@ -1,0 +1,11 @@
+{
+  "domain": "vue",
+  "$comment": "批量锁定：var / 前端密钥 / 未 scoped 样式 / :global() / script setup",
+  "findings": [
+    { "ruleId": "V2-QLT-02", "file": "src/views/v/B.vue", "line": 6 },
+    { "ruleId": "V2-SEC-01", "file": "src/views/v/B.vue", "line": 7 },
+    { "ruleId": "V2-STY-01", "file": "src/views/v/B.vue", "line": 13 },
+    { "ruleId": "V2-STY-02", "file": "src/views/v/B.vue", "line": 15 },
+    { "ruleId": "V2-BASE-01", "file": "src/views/w/C.vue", "line": 1 }
+  ]
+}

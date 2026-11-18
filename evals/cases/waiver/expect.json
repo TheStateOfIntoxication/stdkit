@@ -1,0 +1,6 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "未过期豁免生效：findings 为空，waived 记该条",
+  "findings": [],
+  "waived": ["J8-API-04"]
+}

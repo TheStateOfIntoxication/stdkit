@@ -1,0 +1,11 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "C-2 回归：基本类型、数组、包装类型、泛型四种形态都要命中 J8-API-04。",
+  "findings": [
+    { "ruleId": "J8-API-04", "file": "src/MoneyVo.java", "line": 4 },
+    { "ruleId": "J8-API-04", "file": "src/MoneyVo.java", "line": 5 },
+    { "ruleId": "J8-API-04", "file": "src/MoneyVo.java", "line": 6 },
+    { "ruleId": "J8-API-04", "file": "src/MoneyVo.java", "line": 7 },
+    { "ruleId": "J8-API-04", "file": "src/MoneyVo.java", "line": 8 }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "policy 单条降级：J8-API-04 / J8-SPR-10 默认 critical/high，本仓 .stdkit/policy.json 降到 medium，于是不再阻断（blocked=false），但命中本身照报（severity=medium）",
+  "blocked": false,
+  "findings": [
+    {
+      "ruleId": "J8-API-04",
+      "file": "src/main/java/com/example/demo/Downgraded.java",
+      "line": 5,
+      "severity": "medium"
+    },
+    {
+      "ruleId": "J8-SPR-10",
+      "file": "src/main/java/com/example/demo/Downgraded.java",
+      "line": 8,
+      "severity": "medium"
+    }
+  ]
+}

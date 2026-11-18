@@ -1,0 +1,6 @@
+{
+  "severity": {
+    "J8-API-04": "medium",
+    "J8-SPR-10": "medium"
+  }
+}

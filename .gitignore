@@ -1,0 +1,20 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Node
+node_modules/
+npm-debug.log*
+
+# 本地覆盖（密钥、个人偏好）
+.env
+.env.*
+*.local.*
+
+# 安装/校验临时产物
+.tmp/
+*.log

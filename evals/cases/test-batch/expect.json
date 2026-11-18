@@ -1,0 +1,26 @@
+{
+  "domain": "test",
+  "$comment": "批量锁定：@Ignore / Thread.sleep / 取系统时间 / 打印代替断言（J8-LOG-01 已 exclude src/test，不再双报）",
+  "findings": [
+    {
+      "ruleId": "UT-GEN-04",
+      "file": "src/test/java/com/x/ATest.java",
+      "line": 4
+    },
+    {
+      "ruleId": "UT-GEN-05",
+      "file": "src/test/java/com/x/ATest.java",
+      "line": 6
+    },
+    {
+      "ruleId": "UT-GEN-06",
+      "file": "src/test/java/com/x/ATest.java",
+      "line": 7
+    },
+    {
+      "ruleId": "UT-J8-02",
+      "file": "src/test/java/com/x/ATest.java",
+      "line": 8
+    }
+  ]
+}

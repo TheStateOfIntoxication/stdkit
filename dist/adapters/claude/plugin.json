@@ -1,0 +1,14 @@
+{
+  "name": "stdkit",
+  "version": "0.17.3",
+  "description": "stdkit 工程规范：127 条规则（JDK8 / Vue2 / SQL）；写走 skills，审走 /review-* 手动命令。",
+  "license": "MIT",
+  "keywords": [
+    "standards",
+    "java",
+    "jdk8",
+    "vue2",
+    "sql"
+  ],
+  "agents": []
+}

@@ -1,0 +1,24 @@
+---
+description: stdkit 工程规范（JDK8 / Vue2 / SQL）
+alwaysApply: true
+---
+
+# stdkit 工程规范
+
+- **java-jdk8**：71 条规则
+- **sql**：20 条规则
+- **test**：10 条规则
+- **vue**：26 条规则
+
+完整条文：安装 stdkit 后用 skill `write-java` / `write-vue` / `write-sql` 加载 `references/`。
+
+## 硬约束
+
+- 只改需求范围，禁止顺手重构与搬包。
+- 金额 `BigDecimal`（`J8-API-04`）；列表必须分页且有上限（`J8-SPR-10`）。
+- 写路径幂等（`J8-SPR-12`）；事务内禁远程（`J8-SPR-03`）。
+- `${}` 仅白名单（`J8-MBT-02`）；密钥不入仓库/日志/前端包。
+- Vue 2 用 Options API，禁 TypeScript、禁 Pinia（`V2-BASE-01`、`V2-BASE-02`）。
+- 机械检查：`ds scan --diff`（行级）+ `ds cross`（仓级：回滚是否配齐、多方言是否齐）。
+
+审查只在人明确要求时进行。

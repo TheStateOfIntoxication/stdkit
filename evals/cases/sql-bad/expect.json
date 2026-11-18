@@ -1,0 +1,11 @@
+{
+  "domain": "sql",
+  "findings": [
+    { "ruleId": "SQL-HDR-01", "file": "sql/upgrade/postgres/002_bad.sql", "line": 2 },
+    { "ruleId": "SQL-HDR-01", "file": "sql/upgrade/postgres/002_bad.sql", "line": 3 },
+    { "ruleId": "SQL-DIA-03", "file": "sql/upgrade/postgres/002_bad.sql", "line": 5 },
+    { "ruleId": "SQL-BAN-01", "file": "sql/upgrade/postgres/002_bad.sql", "line": 6 },
+    { "ruleId": "SQL-BAN-02", "file": "sql/upgrade/postgres/002_bad.sql", "line": 7 },
+    { "ruleId": "SQL-BAN-03", "file": "sql/upgrade/postgres/002_bad.sql", "line": 8 }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "domain": "sql",
+  "$comment": "建表 + 同名回滚：正向 CREATE 与回滚 DROP 都应零命中（rollback/** 由 SQL-RSK-01 / SQL-RBK-01 语义管，SQL-RSK-02 已 exclude）",
+  "findings": []
+}

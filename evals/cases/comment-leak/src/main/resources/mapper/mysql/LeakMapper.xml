@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="com.x.mapper.LeakMapper">
+    <!-- CDATA 里的 `<!--` 不能当注释开始；CDATA 内的 SQL 仍要参与匹配 -->
+    <select id="byStatus" resultType="map">
+        <![CDATA[ SELECT * FROM t_order WHERE status = #{status} AND amount < 100 ]]>
+    </select>
+</mapper>

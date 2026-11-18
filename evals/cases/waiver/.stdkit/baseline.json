@@ -1,0 +1,5 @@
+{
+  "waivers": [
+    { "ruleId": "J8-API-04", "file": "src/Legacy.java", "until": "2099-12-31", "reason": "评测用例：未过期应生效" }
+  ]
+}

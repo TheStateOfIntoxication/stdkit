@@ -1,0 +1,48 @@
+{
+  "name": "stdkit",
+  "version": "0.17.3",
+  "description": "JDK 8 / Vue 2 / SQL 工程规范与审查工具包：规则一次编写，Agent 产物全生成，能机器判定的一律机器判。",
+  "type": "module",
+  "bin": {
+    "ds": "./cli/ds.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "check": "node cli/ds.mjs check",
+    "eval": "node cli/ds.mjs eval",
+    "test": "node --test cli/lib/*.test.mjs",
+    "build": "node cli/ds.mjs build",
+    "catalog": "node cli/ds.mjs catalog",
+    "doctor": "node cli/ds.mjs doctor",
+    "rules": "node cli/ds.mjs rules"
+  },
+  "keywords": [
+    "pi-package",
+    "standards",
+    "code-review",
+    "java",
+    "jdk8",
+    "vue2",
+    "sql"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheStateOfIntoxication/stdkit.git"
+  },
+  "files": [
+    "cli",
+    "catalog",
+    "policy",
+    "rules",
+    "templates",
+    "docs",
+    "dist",
+    "LICENSE",
+    "README.md",
+    "!**/*.test.mjs"
+  ],
+  "author": "TheStateOfIntoxication"
+}

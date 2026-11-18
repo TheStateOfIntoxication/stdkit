@@ -1,0 +1,3360 @@
+{
+  "$comment": "生成物，勿手改。node cli/ds.mjs catalog",
+  "version": "0.17.3",
+  "domains": [
+    "java-jdk8",
+    "sql",
+    "test",
+    "vue"
+  ],
+  "counts": {
+    "J8": 71,
+    "SQL": 20,
+    "UT": 10,
+    "V2": 26
+  },
+  "rules": [
+    {
+      "id": "J8-API-01",
+      "title": "Optional 只作返回值",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 125,
+      "anchor": "#j8-api-01-optional-只作返回值",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "optional",
+        "npe"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "OOP 规约 9",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-API-02",
+      "title": "long/Long 拆箱必须判空",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 139,
+      "anchor": "#j8-api-02-long-long-拆箱必须判空",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "npe"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "OOP 规约 7",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-API-03",
+      "title": "字符串判空统一走 StringUtils",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 153,
+      "anchor": "#j8-api-03-字符串判空统一走-stringutils",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "npe",
+        "string"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "OOP 规约 8",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-API-04",
+      "title": "金额必须 BigDecimal",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 169,
+      "anchor": "#j8-api-04-金额必须-bigdecimal",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "money",
+        "precision"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "OOP 规约 10",
+      "see": [],
+      "deny": [
+        "\\b(?:double|float|Double|Float)\\b\\s*(?:\\[\\s*\\]\\s*)?\\w*(?:[Aa]mount|[Pp]rice|[Ff]ee|[Bb]alance|[Tt]otal|[Rr]ate)",
+        "(?:List|Set|Collection|Map|Optional)\\s*<\\s*(?:Double|Float)\\b"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-API-05",
+      "title": "BigDecimal 用字符串构造、用 compareTo 比较",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 199,
+      "anchor": "#j8-api-05-bigdecimal-用字符串构造-用-compareto-比较",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "money",
+        "precision"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "OOP 规约 10",
+      "see": [],
+      "deny": [
+        "new\\s+(?:java\\.math\\.)?BigDecimal\\s*\\(\\s*[0-9]+\\.[0-9]"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-CMT-01",
+      "title": "注释写为什么，不写是什么",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 476,
+      "anchor": "#j8-cmt-01-注释写为什么-不写是什么",
+      "level": "should",
+      "severity": "medium",
+      "tags": [
+        "comment"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "注释规约 1",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-CMT-02",
+      "title": "TODO 必须有工单号，公共方法补 Javadoc",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 490,
+      "anchor": "#j8-cmt-02-todo-必须有工单号-公共方法补-javadoc",
+      "level": "should",
+      "severity": "medium",
+      "tags": [
+        "comment"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "注释规约 2",
+      "see": [],
+      "deny": [
+        "(?<![\\w#])TODO(?!.{0,3}\\d)"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": true,
+      "noString": false
+    },
+    {
+      "id": "J8-CNT-01",
+      "title": "魔法值提常量或枚举",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 81,
+      "anchor": "#j8-cnt-01-魔法值提常量或枚举",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "magic-value"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "常量定义 1",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-COL-01",
+      "title": "Arrays.asList 定长、subList 是视图",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 227,
+      "anchor": "#j8-col-01-arrays-aslist-定长-sublist-是视图",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "collection"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "集合处理 5",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-COL-02",
+      "title": "Collectors.toMap 必须防重复键",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 241,
+      "anchor": "#j8-col-02-collectors-tomap-必须防重复键",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "collection",
+        "exception"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "集合处理 8",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-COL-03",
+      "title": "遍历中删除用 Iterator 或 removeIf",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 265,
+      "anchor": "#j8-col-03-遍历中删除用-iterator-或-removeif",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "collection",
+        "exception"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "集合处理 7",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-COL-04",
+      "title": "判空区分 null 与 empty",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 279,
+      "anchor": "#j8-col-04-判空区分-null-与-empty",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "collection",
+        "npe"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "集合处理 2",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-CON-01",
+      "title": "单例组件禁可变业务字段",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 311,
+      "anchor": "#j8-con-01-单例组件禁可变业务字段",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "concurrency"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "并发处理 1",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-CON-02",
+      "title": "线程池必须有界且命名",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 325,
+      "anchor": "#j8-con-02-线程池必须有界且命名",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "concurrency"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "并发处理 3",
+      "see": [],
+      "deny": [
+        "Executors\\.newCachedThreadPool\\(",
+        "Executors\\.newFixedThreadPool\\(",
+        "Executors\\.newSingleThreadExecutor\\(",
+        "CompletableFuture\\.(runAsync|supplyAsync)\\s*\\([^,)]*\\)"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-CON-03",
+      "title": "ThreadLocal 与 MDC 必须清理",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 357,
+      "anchor": "#j8-con-03-threadlocal-与-mdc-必须清理",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "concurrency",
+        "trace"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "并发处理 8",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-DAT-01",
+      "title": "时区显式、SimpleDateFormat 不共享",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 295,
+      "anchor": "#j8-dat-01-时区显式-simpledateformat-不共享",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "time",
+        "concurrency"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "日期时间 3",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-EXC-01",
+      "title": "禁止空 catch、禁止吞异常",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 387,
+      "anchor": "#j8-exc-01-禁止空-catch-禁止吞异常",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "exception"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "异常处理 1",
+      "see": [],
+      "deny": [
+        "catch\\s*\\([^)]*\\)\\s*\\{\\s*\\}"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-EXC-02",
+      "title": "可关闭资源用 try-with-resources",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 419,
+      "anchor": "#j8-exc-02-可关闭资源用-try-with-resources",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "resource"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "异常处理 6",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-LOG-01",
+      "title": "日志用占位符，禁 System.out",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 435,
+      "anchor": "#j8-log-01-日志用占位符-禁-system-out",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "logging"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [
+        "**/src/test/**"
+      ],
+      "p3c": "日志规约 1",
+      "see": [],
+      "deny": [
+        "System\\.(out|err)\\.print",
+        "\\.printStackTrace\\(\\)"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-LOG-02",
+      "title": "敏感信息禁止入日志",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 462,
+      "anchor": "#j8-log-02-敏感信息禁止入日志",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "security",
+        "logging"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 4",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-01",
+      "title": "复杂 SQL 只写在 XML，禁止注解拼串",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 7,
+      "anchor": "#j8-mbt-01-复杂-sql-只写在-xml-禁止注解拼串",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "mybatis",
+        "sql"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "@(?:Select|Insert|Update|Delete)\\s*\\(\\s*\"",
+        "@(?:Select|Insert|Update|Delete)\\s*\\([^\\n]*\\$\\{",
+        "(?i)^\\s*\"\\s*(?:SELECT|INSERT\\s+INTO|UPDATE|DELETE\\s+FROM)\\b[^\\n]*\\$\\{"
+      ],
+      "allow": [
+        "@(?:Select|Insert|Update|Delete)\\s*\\(\\s*\"[^\"$+]*\"\\s*\\)"
+      ],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-02",
+      "title": "`${}` 只允许服务端白名单",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 61,
+      "anchor": "#j8-mbt-02-只允许服务端白名单",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "sql-inject"
+      ],
+      "applies": [
+        "**/mapper/**/*.xml",
+        "**/*Mapper.xml"
+      ],
+      "exclude": [],
+      "p3c": "MySQL 建表规约 1",
+      "see": [],
+      "deny": [
+        "\\$\\{"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-03",
+      "title": "查询结果必须映射到类型，禁止 resultType=\"map\"",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 88,
+      "anchor": "#j8-mbt-03-查询结果必须映射到类型-禁止-resulttype-map",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "mybatis"
+      ],
+      "applies": [
+        "**/*.xml"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "resultType\\s*=\\s*[\"']map[\"']"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-04",
+      "title": "禁止 SELECT *，禁止无 LIMIT 的全表意图",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 117,
+      "anchor": "#j8-mbt-04-禁止-select-禁止无-limit-的全表意图",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "mybatis",
+        "paging"
+      ],
+      "applies": [
+        "**/*.xml"
+      ],
+      "exclude": [],
+      "p3c": "MySQL 建表规约 5",
+      "see": [],
+      "deny": [
+        "(?i)select\\s+\\*"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-05",
+      "title": "禁止循环内按条查库（N+1）",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 140,
+      "anchor": "#j8-mbt-05-禁止循环内按条查库-n-1",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "mybatis",
+        "performance"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-06",
+      "title": "批量写入与 IN 必须切批",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 164,
+      "anchor": "#j8-mbt-06-批量写入与-in-必须切批",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "mybatis",
+        "batch"
+      ],
+      "applies": [
+        "**/*.xml"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-07",
+      "title": "多方言必须同一次提交改齐",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 178,
+      "anchor": "#j8-mbt-07-多方言必须同一次提交改齐",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "multi-dialect",
+        "mybatis"
+      ],
+      "applies": [
+        "**/mapper/**/*.xml"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-08",
+      "title": "方言差异必须按引擎改写",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 192,
+      "anchor": "#j8-mbt-08-方言差异必须按引擎改写",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "multi-dialect"
+      ],
+      "applies": [
+        "**/mapper/**/*.xml"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-09",
+      "title": "写库必须失效缓存，且尽量在提交后",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 215,
+      "anchor": "#j8-mbt-09-写库必须失效缓存-且尽量在提交后",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "cache"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-10",
+      "title": "读路径必须防穿透、击穿与无 TTL",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 229,
+      "anchor": "#j8-mbt-10-读路径必须防穿透-击穿与无-ttl",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "cache"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-11",
+      "title": "Wrapper 的字符串入口等价于 ${}",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 245,
+      "anchor": "#j8-mbt-11-wrapper-的字符串入口等价于",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "sql-inject"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "\\.last\\(\\s*\"|\\.apply\\(\\s*\""
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-12",
+      "title": "@TableLogic 等价合规，不得再手写 deleted 条件",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 271,
+      "anchor": "#j8-mbt-12-tablelogic-等价合规-不得再手写-deleted-条件",
+      "level": "should",
+      "severity": "low",
+      "tags": [
+        "mybatis",
+        "soft-delete"
+      ],
+      "applies": [
+        "**/*.xml"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-13",
+      "title": "Mapper 只做数据访问",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 287,
+      "anchor": "#j8-mbt-13-mapper-只做数据访问",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "mybatis",
+        "layering"
+      ],
+      "applies": [
+        "**/mapper/**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "工程结构 2",
+      "see": [],
+      "deny": [
+        "@Transactional"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MBT-14",
+      "title": "审计字段交给框架填充",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/02-mybatis.md",
+      "line": 315,
+      "anchor": "#j8-mbt-14-审计字段交给框架填充",
+      "level": "should",
+      "severity": "low",
+      "tags": [
+        "audit"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-MOD-01",
+      "title": "JDK9+ API 与语法禁止进入 J8 代码",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 597,
+      "anchor": "#j8-mod-01-jdk9-api-与语法禁止进入-j8-代码",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "jdk8",
+        "version"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "(?<!Collectors)\\.toList\\(\\)",
+        "(?<!StringUtils)\\.isBlank\\(\\)",
+        "(?<!StringUtils)\\.strip\\(\\)",
+        "\\.lines\\(\\)",
+        "\\.repeat\\(\\s*\\d+\\s*\\)",
+        "\\.transferTo\\(",
+        "List\\.of\\(",
+        "Map\\.of\\(",
+        "Set\\.of\\(",
+        "List\\.copyOf\\(",
+        "Map\\.entry\\(",
+        "Files\\.readString\\(",
+        "Files\\.writeString\\(",
+        "Files\\.mismatch\\(",
+        "\\bvar\\s+\\w+\\s*=[^=]",
+        "\\brecord\\s+[A-Z]\\w*\\s*\\(",
+        "\\bsealed\\s+(class|interface)",
+        "\\.formatted\\(",
+        "\\.orElseThrow\\(\\s*\\)",
+        "Objects\\.requireNonNullElse\\(",
+        "Objects\\.requireNonNullElseGet\\(",
+        "Collectors\\.toUnmodifiable\\w+",
+        "Collectors\\.teeing\\(",
+        "instanceof\\s+[A-Z]\\w*\\s+[a-z]\\w*\\b",
+        "\\(\\s*var\\s+\\w+\\s*\\)\\s*->"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": true
+    },
+    {
+      "id": "J8-NAM-01",
+      "title": "命名约定",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 7,
+      "anchor": "#j8-nam-01-命名约定",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "naming"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "命名风格 1",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-NAM-02",
+      "title": "禁拼音、禁无意义缩写、DTO 后缀开口",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 21,
+      "anchor": "#j8-nam-02-禁拼音-禁无意义缩写-dto-后缀开口",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "naming"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "命名风格 12",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-NAM-03",
+      "title": "参数超过 3 个用参数对象，嵌套超过 3 层早返回",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 35,
+      "anchor": "#j8-nam-03-参数超过-3-个用参数对象-嵌套超过-3-层早返回",
+      "level": "should",
+      "severity": "medium",
+      "tags": [
+        "readability",
+        "api"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-OOP-01",
+      "title": "协作依赖用 final 字段 + 构造器注入",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 95,
+      "anchor": "#j8-oop-01-协作依赖用-final-字段-构造器注入",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "di",
+        "immutability"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "OOP 规约 6",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-OOP-02",
+      "title": "返回集合要防御性拷贝",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 109,
+      "anchor": "#j8-oop-02-返回集合要防御性拷贝",
+      "level": "should",
+      "severity": "medium",
+      "tags": [
+        "immutability"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "OOP 规约 5",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-ORG-01",
+      "title": "一个文件一个 public 类型，成员顺序固定",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 529,
+      "anchor": "#j8-org-01-一个文件一个-public-类型-成员顺序固定",
+      "level": "should",
+      "severity": "low",
+      "tags": [
+        "structure"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-01",
+      "title": "用户输入禁止进入命令、脚本与模板引擎",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 7,
+      "anchor": "#j8-sec-01-用户输入禁止进入命令-脚本与模板引擎",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "security",
+        "inject"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 2",
+      "see": [],
+      "deny": [
+        "Runtime\\.getRuntime\\(\\)\\.exec\\(.*\\+",
+        "new\\s+ProcessBuilder\\([^)]*\\+"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-02",
+      "title": "文件路径必须规范化并校验在允许目录内",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 31,
+      "anchor": "#j8-sec-02-文件路径必须规范化并校验在允许目录内",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "security",
+        "path"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 3",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-03",
+      "title": "服务端代请求用户 URL 必须做主机白名单",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 57,
+      "anchor": "#j8-sec-03-服务端代请求用户-url-必须做主机白名单",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "security",
+        "ssrf"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 3",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-04",
+      "title": "反序列化与危险库限制",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 71,
+      "anchor": "#j8-sec-04-反序列化与危险库限制",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "security",
+        "deserialization"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 5",
+      "see": [],
+      "deny": [
+        "new\\s+ObjectInputStream\\(",
+        "enableDefaultTyping\\(",
+        "activateDefaultTyping\\("
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-05",
+      "title": "越权：资源必须校验属主或租户",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 97,
+      "anchor": "#j8-sec-05-越权-资源必须校验属主或租户",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "security",
+        "authz"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 4",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-06",
+      "title": "定时任务必须防重跑、可观测、可安全重入",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 122,
+      "anchor": "#j8-sec-06-定时任务必须防重跑-可观测-可安全重入",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "scheduled"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "并发处理 10",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-07",
+      "title": "分布式锁必须有 TTL 与持有者标识",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 136,
+      "anchor": "#j8-sec-07-分布式锁必须有-ttl-与持有者标识",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "lock"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-08",
+      "title": "消息消费必须幂等且有失败出口",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 167,
+      "anchor": "#j8-sec-08-消息消费必须幂等且有失败出口",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "mq",
+        "idempotency"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-09",
+      "title": "新增依赖必须有理由，配置分环境",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 183,
+      "anchor": "#j8-sec-09-新增依赖必须有理由-配置分环境",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "deps",
+        "config"
+      ],
+      "applies": [
+        "**/*.xml",
+        "**/*.gradle",
+        "**/*.yml",
+        "**/*.yaml",
+        "**/*.properties"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SEC-10",
+      "title": "日志与错误响应不得带内部结构",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/03-engineering.md",
+      "line": 197,
+      "anchor": "#j8-sec-10-日志与错误响应不得带内部结构",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "security",
+        "logging"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "日志规约 3",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-01",
+      "title": "依赖只允许向下：Controller → Service → Mapper",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 7,
+      "anchor": "#j8-spr-01-依赖只允许向下-controller-service-mapper",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "layering"
+      ],
+      "applies": [
+        "**/controller/**/*.java",
+        "**/*Controller.java"
+      ],
+      "exclude": [],
+      "p3c": "工程结构 2",
+      "see": [],
+      "deny": [
+        "(?:private|protected|public)\\s+(?:final\\s+)?\\w*Mapper\\s+\\w+\\s*"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-02",
+      "title": "Controller 层禁止 @Transactional",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 52,
+      "anchor": "#j8-spr-02-controller-层禁止-transactional",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "transaction"
+      ],
+      "applies": [
+        "**/controller/**/*.java",
+        "**/*Controller.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "@Transactional"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-03",
+      "title": "事务内禁止远程调用与发消息",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 90,
+      "anchor": "#j8-spr-03-事务内禁止远程调用与发消息",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "transaction",
+        "outbound"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-04",
+      "title": "同类自调用不走事务代理",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 120,
+      "anchor": "#j8-spr-04-同类自调用不走事务代理",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "transaction"
+      ],
+      "applies": [
+        "**/service/**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-05",
+      "title": "实体不出参：Controller 返回 DTO，不返回 PO/Entity",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 134,
+      "anchor": "#j8-spr-05-实体不出参-controller-返回-dto-不返回-po-entity",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "api",
+        "dto"
+      ],
+      "applies": [
+        "**/controller/**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "工程结构 5",
+      "see": [],
+      "deny": [
+        "Result<\\s*\\w*(?:PO|Entity|DO)\\s*>"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-06",
+      "title": "写接口必须校验：@Valid + 约束注解 + Service 二次业务校验",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 165,
+      "anchor": "#j8-spr-06-写接口必须校验-valid-约束注解-service-二次业务校验",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "validation",
+        "security"
+      ],
+      "applies": [
+        "**/controller/**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 1",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-07",
+      "title": "禁止 Controller 本地 catch 后把异常消息回给前端",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 179,
+      "anchor": "#j8-spr-07-禁止-controller-本地-catch-后把异常消息回给前端",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "exception",
+        "security"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "异常处理 4",
+      "see": [],
+      "deny": [
+        "catch\\s*\\(\\s*(?:Exception|Throwable)\\s+\\w+\\s*\\)\\s*\\{\\s*return\\s+Result\\.\\w*\\([^)]*getMessage"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-08",
+      "title": "同一服务只选一种响应契约",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 209,
+      "anchor": "#j8-spr-08-同一服务只选一种响应契约",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "api"
+      ],
+      "applies": [
+        "**/controller/**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "前后端规约 1",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-09",
+      "title": "系统错误只记日志，不回传内部细节",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 223,
+      "anchor": "#j8-spr-09-系统错误只记日志-不回传内部细节",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "exception",
+        "security"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "异常处理 3",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-10",
+      "title": "列表接口必须分页，pageSize 必须有上限",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 239,
+      "anchor": "#j8-spr-10-列表接口必须分页-pagesize-必须有上限",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "paging"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "\\w{1,64}Mapper\\.selectAll\\(\\)"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-11",
+      "title": "禁止内存分页与全量导出",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 266,
+      "anchor": "#j8-spr-11-禁止内存分页与全量导出",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "paging"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "集合处理 9",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-12",
+      "title": "写路径必须幂等或可安全重试",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 294,
+      "anchor": "#j8-spr-12-写路径必须幂等或可安全重试",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "idempotency"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-13",
+      "title": "并发改同一行必须用版本号或条件更新",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 308,
+      "anchor": "#j8-spr-13-并发改同一行必须用版本号或条件更新",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "concurrency",
+        "transaction"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-14",
+      "title": "出站调用必须配超时与有限重试",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 335,
+      "anchor": "#j8-spr-14-出站调用必须配超时与有限重试",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "outbound"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-15",
+      "title": "环境地址与凭证禁止硬编码",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 351,
+      "anchor": "#j8-spr-15-环境地址与凭证禁止硬编码",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "security",
+        "config"
+      ],
+      "applies": [
+        "**/*.java",
+        "**/*.yml",
+        "**/*.yaml",
+        "**/*.properties",
+        "**/*.ini"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 1",
+      "see": [],
+      "deny": [
+        "(?i)\\b(password|passwd|pwd|secret|secretkey|accesskey|token)\\s*[:=]\\s*\"(?=[^\"\\n]{6,}\")[^\"+\\n]*[\\d!@#$%^&*_\\-][^\"+\\n]*\"",
+        "(?i)^\\s*[\\w.\\-]*(?:password|passwd|pwd|secret|secretkey|accesskey|token)\\s*[:=]\\s*(?![$\\\\])(?=[^\\s]*[\\d!@#$%^&*_\\-])[^\\s(,)\\x3b`\"]{6,}\\s*$",
+        "(?i)jdbc:[a-z]+://[^\"\\s]*(password|pwd)="
+      ],
+      "allow": [
+        "\\$\\{|process\\.env|os\\.environ|\\bENC\\(\\{"
+      ],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-16",
+      "title": "入口必须生成或透传 traceId 并写入 MDC",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 412,
+      "anchor": "#j8-spr-16-入口必须生成或透传-traceid-并写入-mdc",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "trace",
+        "observability"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "日志规约 5",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-17",
+      "title": "API 兼容：字段只增不删，破坏性变更走新路径",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 426,
+      "anchor": "#j8-spr-17-api-兼容-字段只增不删-破坏性变更走新路径",
+      "level": "should",
+      "severity": "medium",
+      "tags": [
+        "api",
+        "compatibility"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "前后端规约 3",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-18",
+      "title": "事务注解只放在 Service 层",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 440,
+      "anchor": "#j8-spr-18-事务注解只放在-service-层",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "transaction"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-SPR-19",
+      "title": "包结构按默认树落位，存量仓按 L3 映射",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/01-spring.md",
+      "line": 461,
+      "anchor": "#j8-spr-19-包结构按默认树落位-存量仓按-l3-映射",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "structure",
+        "layering"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "工程结构 1",
+      "see": [
+        "J8-SPR-01"
+      ],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "J8-STR-01",
+      "title": "Stream 用于转换，不用于副作用",
+      "domain": "java-jdk8",
+      "file": "rules/java-jdk8/00-language.md",
+      "line": 567,
+      "anchor": "#j8-str-01-stream-用于转换-不用于副作用",
+      "level": "should",
+      "severity": "medium",
+      "tags": [
+        "stream",
+        "readability"
+      ],
+      "applies": [
+        "**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "\\.stream\\(\\)\\s*\\.forEach\\("
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": true
+    },
+    {
+      "id": "SQL-BAN-01",
+      "title": "禁止无 WHERE 的 DELETE",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 271,
+      "anchor": "#sql-ban-01-禁止无-where-的-delete",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "sql-danger"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "MySQL 数据订正 1",
+      "see": [],
+      "deny": [
+        "(?i)^\\s*delete\\s+from\\s+[\\w.\"\\x60]+\\s*\\x3b?\\s*$"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-BAN-02",
+      "title": "禁止 DROP DATABASE / SCHEMA",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 294,
+      "anchor": "#sql-ban-02-禁止-drop-database-schema",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "sql-danger"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "(?i)^\\s*drop\\s+(?:database|schema)\\b"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-BAN-03",
+      "title": "禁止明文凭证",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 318,
+      "anchor": "#sql-ban-03-禁止明文凭证",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "security"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 1",
+      "see": [],
+      "deny": [
+        "(?i)identified\\s+by\\s+'[^']{4,}'",
+        "(?i)\\bpassword\\s*=\\s*'[^']{2,}'"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-BAN-04",
+      "title": "禁止吞错",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 342,
+      "anchor": "#sql-ban-04-禁止吞错",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "sql-danger"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "(?i)when\\s+others\\s+then\\s+null"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-DIA-01",
+      "title": "变更必须覆盖 L3 声明的全部 engines",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 48,
+      "anchor": "#sql-dia-01-变更必须覆盖-l3-声明的全部-engines",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "multi-dialect"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-DIA-02",
+      "title": "各方言原生守卫，禁止跨方言照抄",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 62,
+      "anchor": "#sql-dia-02-各方言原生守卫-禁止跨方言照抄",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "multi-dialect"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-DIA-03",
+      "title": "MySQL 专有语法不得出现在 PG / Kingbase 目录",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 84,
+      "anchor": "#sql-dia-03-mysql-专有语法不得出现在-pg-kingbase-目录",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "multi-dialect"
+      ],
+      "applies": [
+        "sql/upgrade/postgres/**/*.sql",
+        "sql/upgrade/kingbase/**/*.sql",
+        "sql/install/postgres_init.sql",
+        "sql/install/kingbase_init.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "(?i)auto_increment",
+        "(?i)on\\s+duplicate\\s+key",
+        "(?i)engine\\s*=\\s*innodb",
+        "(?i)\\blimit\\s+\\d+\\s*,\\s*\\d+"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-DIR-01",
+      "title": "目录布局固定：install / upgrade / rollback",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 7,
+      "anchor": "#sql-dir-01-目录布局固定-install-upgrade-rollback",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "sql-layout"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-EXE-01",
+      "title": "install 与 upgrade 不得混跑",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 442,
+      "anchor": "#sql-exe-01-install-与-upgrade-不得混跑",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "execution"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-EXT-01",
+      "title": "删列 / 收紧约束走扩展-收缩",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 419,
+      "anchor": "#sql-ext-01-删列-收紧约束走扩展-收缩",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "migration"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-HDR-01",
+      "title": "文件头必填项不得留模板占位",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 232,
+      "anchor": "#sql-hdr-01-文件头必填项不得留模板占位",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "header"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "^\\s*--\\s*(?:作者|目标版本|说明|执行环境|回滚文件)\\s*:\\s*\\["
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": true,
+      "noString": false
+    },
+    {
+      "id": "SQL-IDM-01",
+      "title": "DDL 幂等用本引擎原生守卫",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 136,
+      "anchor": "#sql-idm-01-ddl-幂等用本引擎原生守卫",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "idempotent"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-IDM-02",
+      "title": "seed 用存在性判断，别用覆盖写",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 173,
+      "anchor": "#sql-idm-02-seed-用存在性判断-别用覆盖写",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "idempotent",
+        "seed"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-IDM-03",
+      "title": "幂等 ≠ 安全",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 197,
+      "anchor": "#sql-idm-03-幂等-安全",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "idempotent",
+        "safety"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-NAM-01",
+      "title": "文件名 `{序号}_{描述}.sql`，不带产品版本号",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 32,
+      "anchor": "#sql-nam-01-文件名-序号-_-描述-sql-不带产品版本号",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "sql-naming"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-RBK-01",
+      "title": "正向必须配同名回滚，执行序为反序",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 213,
+      "anchor": "#sql-rbk-01-正向必须配同名回滚-执行序为反序",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "rollback"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-RDM-01",
+      "title": "`sql/README.md` 必须维护到可自助执行",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 456,
+      "anchor": "#sql-rdm-01-sql-readme-md-必须维护到可自助执行",
+      "level": "should",
+      "severity": "medium",
+      "tags": [
+        "docs"
+      ],
+      "applies": [
+        "sql/README.md"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-RSK-01",
+      "title": "按 L1 / L2 / L3 分级并写进「说明」",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 369,
+      "anchor": "#sql-rsk-01-按-l1-l2-l3-分级并写进-说明",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "risk"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-RSK-02",
+      "title": "DROP TABLE / TRUNCATE / 大表 ALTER 必须带控制措施",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 391,
+      "anchor": "#sql-rsk-02-drop-table-truncate-大表-alter-必须带控制措施",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "risk",
+        "sql-danger"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [
+        "sql/**/rollback/**"
+      ],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "(?i)^\\s*(?:drop\\s+table|truncate\\s+table)\\b"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "SQL-TYP-01",
+      "title": "类型按方言对照，不假设通用",
+      "domain": "sql",
+      "file": "rules/sql/00-delivery.md",
+      "line": 110,
+      "anchor": "#sql-typ-01-类型按方言对照-不假设通用",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "multi-dialect"
+      ],
+      "applies": [
+        "sql/**/*.sql"
+      ],
+      "exclude": [],
+      "p3c": "MySQL 建表规约 3",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-GEN-01",
+      "title": "测行为与边界，不测私有实现",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 8,
+      "anchor": "#ut-gen-01-测行为与边界-不测私有实现",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "test-design"
+      ],
+      "applies": [
+        "**/src/test/**/*.java",
+        "**/*.spec.js",
+        "**/*.test.js"
+      ],
+      "exclude": [],
+      "p3c": "单元测试 2",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-GEN-02",
+      "title": "必须覆盖清单",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 22,
+      "anchor": "#ut-gen-02-必须覆盖清单",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "test-coverage"
+      ],
+      "applies": [
+        "**/src/test/**/*.java",
+        "**/*.spec.js",
+        "**/*.test.js"
+      ],
+      "exclude": [],
+      "p3c": "单元测试 1",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-GEN-03",
+      "title": "一个用例一个意图，用例间互不依赖",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 36,
+      "anchor": "#ut-gen-03-一个用例一个意图-用例间互不依赖",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "test-design"
+      ],
+      "applies": [
+        "**/src/test/**/*.java",
+        "**/*.spec.js",
+        "**/*.test.js"
+      ],
+      "exclude": [],
+      "p3c": "单元测试 5",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-GEN-04",
+      "title": "禁提交被禁用的用例",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 50,
+      "anchor": "#ut-gen-04-禁提交被禁用的用例",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "test-hygiene"
+      ],
+      "applies": [
+        "**/src/test/**/*.java",
+        "**/*.spec.js",
+        "**/*.test.js"
+      ],
+      "exclude": [],
+      "p3c": "单元测试 6",
+      "see": [],
+      "deny": [
+        "@Ignore",
+        "@Disabled",
+        "\\.only\\(",
+        "xit\\(",
+        "xdescribe\\("
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-GEN-05",
+      "title": "禁 sleep 等待异步",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 101,
+      "anchor": "#ut-gen-05-禁-sleep-等待异步",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "test-flaky"
+      ],
+      "applies": [
+        "**/src/test/**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "单元测试 4",
+      "see": [],
+      "deny": [
+        "Thread\\.sleep\\("
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-GEN-06",
+      "title": "用例必须可重复：不依赖真实时间、随机、网络",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 125,
+      "anchor": "#ut-gen-06-用例必须可重复-不依赖真实时间-随机-网络",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "test-flaky"
+      ],
+      "applies": [
+        "**/src/test/**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "单元测试 7",
+      "see": [],
+      "deny": [
+        "LocalDateTime\\.now\\(",
+        "Instant\\.now\\(",
+        "new Date\\(\\)",
+        "Math\\.random\\("
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-J8-01",
+      "title": "单测不连真库、真 Redis、真 MQ",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 153,
+      "anchor": "#ut-j8-01-单测不连真库-真-redis-真-mq",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "test-isolation"
+      ],
+      "applies": [
+        "**/src/test/**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "单元测试 8",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-J8-02",
+      "title": "断言走断言库，不靠打印",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 167,
+      "anchor": "#ut-j8-02-断言走断言库-不靠打印",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "test-assert"
+      ],
+      "applies": [
+        "**/src/test/**/*.java"
+      ],
+      "exclude": [],
+      "p3c": "单元测试 5",
+      "see": [],
+      "deny": [
+        "System\\.(?:out|err)\\.print"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-NAM-01",
+      "title": "用例命名说清场景与期望",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 85,
+      "anchor": "#ut-nam-01-用例命名说清场景与期望",
+      "level": "should",
+      "severity": "low",
+      "tags": [
+        "test-naming"
+      ],
+      "applies": [
+        "**/src/test/**/*.java",
+        "**/*.spec.js",
+        "**/*.test.js"
+      ],
+      "exclude": [],
+      "p3c": "单元测试 3",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "UT-VUE-01",
+      "title": "Vue2 单测测 props / emit / 渲染，不测内部方法",
+      "domain": "test",
+      "file": "rules/test/00-unit.md",
+      "line": 192,
+      "anchor": "#ut-vue-01-vue2-单测测-props-emit-渲染-不测内部方法",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "test-vue"
+      ],
+      "applies": [
+        "**/*.spec.js",
+        "**/*.test.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-API-01",
+      "title": "只走统一封装，禁裸 axios / fetch",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 290,
+      "anchor": "#v2-api-01-只走统一封装-禁裸-axios-fetch",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2",
+        "http"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [
+        "**/utils/fetch.js",
+        "**/utils/request.js",
+        "**/utils/http.js",
+        "**/utils/axios.js",
+        "**/api/request.js",
+        "**/api/http.js"
+      ],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "\\baxios\\.(get|post|put|delete)\\(",
+        "import\\s+axios\\s+from",
+        "(?<![\\w$.])(?:(?:window|self)\\.)?fetch\\(\\s*['\"\\x60]"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-API-02",
+      "title": "接口基址来自配置，禁在页面里拼地址",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 327,
+      "anchor": "#v2-api-02-接口基址来自配置-禁在页面里拼地址",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2",
+        "http"
+      ],
+      "applies": [
+        "**/views/**/*.vue",
+        "**/views/**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "\\$\\{IP\\}",
+        "\\$\\{PORT\\}",
+        "https?://\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-API-03",
+      "title": "所有请求必须有错误处理",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 351,
+      "anchor": "#v2-api-03-所有请求必须有错误处理",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "http"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-API-04",
+      "title": "响应解包由拦截器统一，禁二次解析",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 365,
+      "anchor": "#v2-api-04-响应解包由拦截器统一-禁二次解析",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2",
+        "http"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [
+        "**/utils/fetch.js",
+        "**/utils/request.js",
+        "**/utils/http.js",
+        "**/utils/axios.js",
+        "**/api/request.js",
+        "**/api/http.js"
+      ],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "JSON\\.parse\\(\\s*(?:res|response|resp)\\.data",
+        "JSON\\.parse\\(\\s*this\\.response\\.data"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-API-05",
+      "title": "接口调用抽到 api/ 目录",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 398,
+      "anchor": "#v2-api-05-接口调用抽到-api-目录",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "structure"
+      ],
+      "applies": [
+        "**/views/**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-BASE-01",
+      "title": "只用 Options API，禁 Composition API 与 TypeScript",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 8,
+      "anchor": "#v2-base-01-只用-options-api-禁-composition-api-与-typescript",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "<script[^>]*\\bsetup\\b",
+        "\\bdefineProps\\b",
+        "\\bdefineEmits\\b",
+        "<script[^>]*lang=[\"']ts[\"']"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-BASE-02",
+      "title": "禁 Pinia、禁第二个 UI 库、禁原子化 CSS",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 41,
+      "anchor": "#v2-base-02-禁-pinia-禁第二个-ui-库-禁原子化-css",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2",
+        "deps"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "from\\s+['\"]pinia['\"]",
+        "from\\s+['\"]element-plus['\"]",
+        "from\\s+['\"]ant-design-vue['\"]",
+        "lang=[\"'](?:less|stylus)[\"']",
+        "from\\s+['\"](?:tailwindcss|@tailwindcss)['\"]",
+        "@tailwind\\b"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-CMP-01",
+      "title": "组件文件 PascalCase，`name` 与文件名一致",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 71,
+      "anchor": "#v2-cmp-01-组件文件-pascalcase-name-与文件名一致",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "naming"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-CMP-02",
+      "title": "data 必须是函数",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 85,
+      "anchor": "#v2-cmp-02-data-必须是函数",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "^\\s{0,4}data\\s*:\\s*\\{"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-CMP-03",
+      "title": "props 必须声明类型",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 116,
+      "anchor": "#v2-cmp-03-props-必须声明类型",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "props\\s*:\\s*\\["
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-CMP-04",
+      "title": "单文件不超过 500 行，超限拆分",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 142,
+      "anchor": "#v2-cmp-04-单文件不超过-500-行-超限拆分",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "maintainability"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-CMP-05",
+      "title": "事件监听与定时器必须在 beforeDestroy 清理",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 156,
+      "anchor": "#v2-cmp-05-事件监听与定时器必须在-beforedestroy-清理",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2",
+        "leak"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-CMP-06",
+      "title": "`el-table` 必须给高度，列必须对齐",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 222,
+      "anchor": "#v2-cmp-06-el-table-必须给高度-列必须对齐",
+      "level": "must",
+      "severity": "low",
+      "tags": [
+        "vue2",
+        "element"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-CMP-07",
+      "title": "`el-form` 走 `:model` + `:rules`，`el-form-item` 必须 `prop`",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 253,
+      "anchor": "#v2-cmp-07-el-form-走-model-rules-el-form-item-必须-prop",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "element",
+        "form"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-EVT-01",
+      "title": "用 Vue 方式操作 DOM，禁 jQuery 与 innerHTML",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 172,
+      "anchor": "#v2-evt-01-用-vue-方式操作-dom-禁-jquery-与-innerhtml",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2",
+        "dom"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "from\\s+['\"]jquery['\"]",
+        "document\\.getElementById\\(",
+        "\\.innerHTML\\s*="
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-EVT-02",
+      "title": "提示用 $message / $confirm，禁原生 alert / confirm",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 197,
+      "anchor": "#v2-evt-02-提示用-message-confirm-禁原生-alert-confirm",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "ux"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "(?<![\\w$.])alert\\(",
+        "(?<![\\w$.])confirm\\("
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-QLT-01",
+      "title": "禁 console 与 debugger 进提交",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 558,
+      "anchor": "#v2-qlt-01-禁-console-与-debugger-进提交",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "lint"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "console\\.(log|debug)\\(",
+        "\\bdebugger\\b"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-QLT-02",
+      "title": "const/let，禁 var",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 582,
+      "anchor": "#v2-qlt-02-const-let-禁-var",
+      "level": "must",
+      "severity": "low",
+      "tags": [
+        "vue2",
+        "lint"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "\\bvar\\s+\\w+\\s*="
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-RTR-01",
+      "title": "路由懒加载，禁 window.location 跳转",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 485,
+      "anchor": "#v2-rtr-01-路由懒加载-禁-window-location-跳转",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2",
+        "router"
+      ],
+      "applies": [
+        "**/*.js",
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "window\\.location\\.href\\s*="
+      ],
+      "allow": [
+        "window\\.location\\.href\\s*=\\s*[\\x60'\"][^\\x60'\"]*(?:/(?:login|logout|sso|shell)\\b|\\b401|\\bexpired)"
+      ],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-RTR-02",
+      "title": "禁改已有路由 path 与 name",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 514,
+      "anchor": "#v2-rtr-02-禁改已有路由-path-与-name",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "router"
+      ],
+      "applies": [
+        "**/router/**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-SEC-01",
+      "title": "前端包内禁真实密钥",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 606,
+      "anchor": "#v2-sec-01-前端包内禁真实密钥",
+      "level": "must",
+      "severity": "critical",
+      "tags": [
+        "vue2",
+        "security"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "安全规约 1",
+      "see": [],
+      "deny": [
+        "(?i)\\b(appsecret|secretkey|accesskey|appkey|apikey)\\s*[:=]\\s*['\"][^'\"]{6,}['\"]"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-STO-01",
+      "title": "状态只通过 mutation 修改",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 528,
+      "anchor": "#v2-sto-01-状态只通过-mutation-修改",
+      "level": "must",
+      "severity": "high",
+      "tags": [
+        "vue2",
+        "vuex"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-STO-02",
+      "title": "组件内状态不要进 Vuex",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 542,
+      "anchor": "#v2-sto-02-组件内状态不要进-vuex",
+      "level": "should",
+      "severity": "low",
+      "tags": [
+        "vue2",
+        "vuex"
+      ],
+      "applies": [
+        "**/*.vue",
+        "**/*.js"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-STY-01",
+      "title": "组件样式必须 scoped",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 414,
+      "anchor": "#v2-sty-01-组件样式必须-scoped",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "style"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [
+        "**/App.vue",
+        "**/layout/**/*.vue",
+        "**/layouts/**/*.vue"
+      ],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        "<style(?![^>]*\\bscoped\\b)[^>]*>"
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-STY-02",
+      "title": "禁在组件内用 :global() 覆盖 Element UI",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 446,
+      "anchor": "#v2-sty-02-禁在组件内用-global-覆盖-element-ui",
+      "level": "must",
+      "severity": "medium",
+      "tags": [
+        "vue2",
+        "style"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [
+        ":global\\("
+      ],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    },
+    {
+      "id": "V2-STY-03",
+      "title": "类名 kebab-case，控 !important",
+      "domain": "vue",
+      "file": "rules/vue/00-vue2.md",
+      "line": 469,
+      "anchor": "#v2-sty-03-类名-kebab-case-控-important",
+      "level": "should",
+      "severity": "low",
+      "tags": [
+        "vue2",
+        "style"
+      ],
+      "applies": [
+        "**/*.vue"
+      ],
+      "exclude": [],
+      "p3c": "-",
+      "see": [],
+      "deny": [],
+      "allow": [],
+      "status": "active",
+      "raw": false,
+      "noString": false
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "domain": "vue",
+  "$comment": "N-1 三种泄漏形态：字符串 / 模板属性 / CDATA 里出现裸 `<!--` 时，后面的代码不能被当成注释吞掉；CDATA 内的 SQL 仍要参与匹配",
+  "findings": [
+    { "ruleId": "V2-CMP-02", "file": "src/views/LeakScript.vue", "line": 7 },
+    { "ruleId": "V2-CMP-02", "file": "src/views/LeakTemplate.vue", "line": 11 },
+    { "ruleId": "J8-MBT-03", "file": "src/main/resources/mapper/mysql/LeakMapper.xml", "line": 4 },
+    { "ruleId": "J8-MBT-04", "file": "src/main/resources/mapper/mysql/LeakMapper.xml", "line": 5 }
+  ]
+}

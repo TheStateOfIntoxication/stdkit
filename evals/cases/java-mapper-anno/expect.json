@@ -1,0 +1,11 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "注解 SQL 的边界：单行/数组/换行只要参数化（#{}）就放行；${} 与拼接四种写法一律报",
+  "findings": [
+    { "ruleId": "J8-MBT-01", "file": "src/main/java/com/x/mapper/LegacyOrderMapper.java", "line": 12 },
+    { "ruleId": "J8-MBT-01", "file": "src/main/java/com/x/mapper/LegacyOrderMapper.java", "line": 16 },
+    { "ruleId": "J8-MBT-01", "file": "src/main/java/com/x/mapper/LegacyOrderMapper.java", "line": 21 },
+    { "ruleId": "J8-MBT-01", "file": "src/main/java/com/x/mapper/LegacyOrderMapper.java", "line": 25 },
+    { "ruleId": "J8-MBT-01", "file": "src/main/java/com/x/mapper/LegacyOrderMapper.java", "line": 30 }
+  ]
+}

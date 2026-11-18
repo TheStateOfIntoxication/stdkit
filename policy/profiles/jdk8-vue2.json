@@ -1,0 +1,12 @@
+{
+  "$comment": "JDK8 + Vue2 存量仓 profile：以 default 为基，只覆盖列出的键。用法：ds scan --profile jdk8-vue2",
+  "extends": "default",
+  "version": 1,
+  "stack": {
+    "java": 8,
+    "vue": 2,
+    "engines": ["mysql", "kingbase"]
+  },
+  "blockOn": ["critical", "high"],
+  "domains": ["java-jdk8", "vue", "sql", "test"]
+}

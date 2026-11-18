@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+
+# dist/ 是生成物：GitHub 上折叠、diff 默认不展开（评审只看 rules/ 与 cli/）
+dist/** linguist-generated=true -diff

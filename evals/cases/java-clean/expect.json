@@ -1,0 +1,5 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "零命中用例：守住误报。以下都不得判违规：Collectors.toList()、StringUtils.isBlank(raw)、new BigDecimal(\"10.00\")、new BigDecimal(0)（int 构造精确）、subList 取前 N 条、URL 里的 token= 拼接、字符串字面量里的示例代码（var/record/List.of）。",
+  "findings": []
+}

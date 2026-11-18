@@ -1,0 +1,181 @@
+{
+  "$comment": "JDK 9+ 构造清单（单一事实源）。条目同时用于两处：guard 扫规则示例（ds check）、rule 为 true 的进 J8-MOD-01 的业务代码 deny。两端 pattern 必须逐字一致，ds check 会断言。",
+  "version": 2,
+  "entries": [
+    {
+      "id": "stream-toList",
+      "pattern": "(?<!Collectors)\\.toList\\(\\)",
+      "hint": "Stream#toList 是 Java 16+，J8 用 Collectors.toList()",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "string-isBlank",
+      "pattern": "(?<!StringUtils)\\.isBlank\\(\\)",
+      "hint": "String#isBlank 是 Java 11+，J8 用 StringUtils.isBlank",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "string-strip",
+      "pattern": "(?<!StringUtils)\\.strip\\(\\)",
+      "hint": "String#strip 是 Java 11+，J8 用 trim",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "string-lines",
+      "pattern": "\\.lines\\(\\)",
+      "hint": "String#lines 是 Java 11+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "string-repeat",
+      "pattern": "\\.repeat\\(\\s*\\d+\\s*\\)",
+      "hint": "String#repeat 是 Java 11+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "transfer-to",
+      "pattern": "\\.transferTo\\(",
+      "hint": "InputStream#transferTo 是 Java 9+，J8 用 IOUtils.copy",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "list-of",
+      "pattern": "List\\.of\\(",
+      "hint": "List.of 是 Java 9+，J8 用 Arrays.asList",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "map-of",
+      "pattern": "Map\\.of\\(",
+      "hint": "Map.of 是 Java 9+，J8 用 Collections.unmodifiableMap",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "set-of",
+      "pattern": "Set\\.of\\(",
+      "hint": "Set.of 是 Java 9+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "list-copyOf",
+      "pattern": "List\\.copyOf\\(",
+      "hint": "List.copyOf 是 Java 10+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "map-entry",
+      "pattern": "Map\\.entry\\(",
+      "hint": "Map.entry 是 Java 9+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "files-readString",
+      "pattern": "Files\\.readString\\(",
+      "hint": "Files#readString 是 Java 11+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "files-writeString",
+      "pattern": "Files\\.writeString\\(",
+      "hint": "Files#writeString 是 Java 11+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "files-mismatch",
+      "pattern": "Files\\.mismatch\\(",
+      "hint": "Files#mismatch 是 Java 12+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "var",
+      "pattern": "\\bvar\\s+\\w+\\s*=[^=]",
+      "hint": "var 是 Java 10+，J8 用显式类型",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "record",
+      "pattern": "\\brecord\\s+[A-Z]\\w*\\s*\\(",
+      "hint": "record 是 Java 16+，J8 用 final 类 + getter",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "sealed",
+      "pattern": "\\bsealed\\s+(class|interface)",
+      "hint": "sealed 是 Java 17+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "string-formatted",
+      "pattern": "\\.formatted\\(",
+      "hint": "String#formatted 是 Java 15+，J8 用 String.format",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "optional-orElseThrow-noarg",
+      "pattern": "\\.orElseThrow\\(\\s*\\)",
+      "hint": "Optional#orElseThrow() 无参版是 Java 10+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "objects-requireNonNullElse",
+      "pattern": "Objects\\.requireNonNullElse\\(",
+      "hint": "Objects#requireNonNullElse 是 Java 9+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "objects-requireNonNullElseGet",
+      "pattern": "Objects\\.requireNonNullElseGet\\(",
+      "hint": "Objects#requireNonNullElseGet 是 Java 9+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "collectors-toUnmodifiable",
+      "pattern": "Collectors\\.toUnmodifiable\\w+",
+      "hint": "Collectors#toUnmodifiable* 是 Java 10+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "collectors-teeing",
+      "pattern": "Collectors\\.teeing\\(",
+      "hint": "Collectors#teeing 是 Java 12+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "instanceof-pattern",
+      "pattern": "instanceof\\s+[A-Z]\\w*\\s+[a-z]\\w*\\b",
+      "hint": "instanceof 模式匹配是 Java 16+",
+      "guard": true,
+      "rule": true
+    },
+    {
+      "id": "lambda-var",
+      "pattern": "\\(\\s*var\\s+\\w+\\s*\\)\\s*->",
+      "hint": "lambda 形参写 var 是 Java 11+",
+      "guard": true,
+      "rule": true
+    }
+  ]
+}

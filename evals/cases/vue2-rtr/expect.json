@@ -1,0 +1,7 @@
+{
+  "domain": "vue",
+  "$comment": "C-3 回归：带 token 的业务跳转不是「登录失效兜底」，必须报。allow 只认跳转目标形态（/login /logout /sso /shell 401 expired）。",
+  "findings": [
+    { "ruleId": "V2-RTR-01", "file": "src/router/guard.js", "line": 2 }
+  ]
+}

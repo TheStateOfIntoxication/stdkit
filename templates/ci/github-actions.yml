@@ -1,0 +1,28 @@
+# stdkit 门禁示例（GitHub Actions）
+# 复制到业务仓 .github/workflows/stdkit.yml，按注释改 STDKIT_HOME。
+name: stdkit
+
+on:
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 需要完整历史算 diff
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # stdkit 走 git 依赖或 submodule 二选一；下面用 submodule 示例
+      - name: Checkout stdkit
+        run: git submodule update --init --recursive
+
+      - name: stdkit gate
+        env:
+          STDKIT_HOME: ${{ github.workspace }}/stdkit
+        run: sh stdkit/templates/ci/gate.sh "origin/${{ github.base_ref }}"

@@ -1,0 +1,8 @@
+{
+  "domain": "sql",
+  "$comment": "批量锁定：DROP TABLE（受限）与 WHEN OTHERS THEN NULL（吞错）",
+  "findings": [
+    { "ruleId": "SQL-RSK-02", "file": "sql/upgrade/mysql/003_bad.sql", "line": 12 },
+    { "ruleId": "SQL-BAN-04", "file": "sql/upgrade/mysql/003_bad.sql", "line": 16 }
+  ]
+}

@@ -1,0 +1,4 @@
+<configuration>
+    <pattern>${pattern}</pattern>
+    <file>${log.path}</file>
+</configuration>

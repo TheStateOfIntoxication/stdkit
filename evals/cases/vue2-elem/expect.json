@@ -1,0 +1,5 @@
+{
+  "domain": "vue",
+  "$comment": "Element UI 正例：el-table 有 :height / 列有 min-width 与 align、el-form 有 :model+:rules 且 form-item 带 prop —— 两条组件级规则都是语义规则，这里锁住「不误报」",
+  "findings": []
+}

@@ -1,0 +1,5 @@
+{
+  "domain": "vue",
+  "$comment": "Vue 侧误报守住：App.vue 全局样式(exclude)、JSON.parse 本地缓存、window.location 登录/SSO 兜底(allow)、ECharts 深层 data 键、模板注释里的 <script setup>。",
+  "findings": []
+}

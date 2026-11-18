@@ -1,0 +1,9 @@
+{
+  "domain": "java-jdk8",
+  "$comment": "Java 手艺类两条可机判规则：TODO 无工单号、stream().forEach 塞副作用；CraftGood 是反向（带工单 + for 循环）",
+  "blocked": false,
+  "findings": [
+    { "ruleId": "J8-CMT-02", "file": "src/main/java/com/x/craft/CraftBad.java", "line": 8, "severity": "medium" },
+    { "ruleId": "J8-STR-01", "file": "src/main/java/com/x/craft/CraftBad.java", "line": 10, "severity": "medium" }
+  ]
+}

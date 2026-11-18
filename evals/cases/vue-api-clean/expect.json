@@ -1,0 +1,5 @@
+{
+  "domain": "vue",
+  "$comment": "封装层正例：utils/fetch.js 自建 axios 实例 + 拦截器解包（exclude 放过），api/request.js 导出 fetch 函数，组件内 fetch(page) 同名方法——三条都是 N-1/N-2/N-3 的误报形态",
+  "findings": []
+}

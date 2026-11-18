@@ -1,0 +1,15 @@
+{
+  "domain": "vue",
+  "findings": [
+    { "ruleId": "V2-API-01", "file": "src/views/order/index.vue", "line": 1 },
+    { "ruleId": "V2-BASE-02", "file": "src/views/order/index.vue", "line": 2 },
+    { "ruleId": "V2-CMP-03", "file": "src/views/order/index.vue", "line": 6 },
+    { "ruleId": "V2-CMP-02", "file": "src/views/order/index.vue", "line": 7 },
+    { "ruleId": "V2-API-01", "file": "src/views/order/index.vue", "line": 11 },
+    { "ruleId": "V2-API-02", "file": "src/views/order/index.vue", "line": 11 },
+    { "ruleId": "V2-QLT-01", "file": "src/views/order/index.vue", "line": 12 },
+    { "ruleId": "V2-API-04", "file": "src/views/order/index.vue", "line": 13 },
+    { "ruleId": "V2-EVT-01", "file": "src/views/order/index.vue", "line": 15 },
+    { "ruleId": "V2-EVT-02", "file": "src/views/order/index.vue", "line": 16 }
+  ]
+}
