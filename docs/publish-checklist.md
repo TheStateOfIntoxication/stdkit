@@ -116,7 +116,7 @@ node cli/ds.mjs publish-check /path/to/stdkit /path/to/另一个仓
 
 ```bash
 node cli/ds.mjs catalog && node cli/ds.mjs build && node cli/ds.mjs check && node cli/ds.mjs eval
-node --test cli/lib/*.test.mjs
+npm test                        # 跨平台入口，失败会打印哪条断言
 npm pack --dry-run   # 看 files 列表是否合理
 ```
 

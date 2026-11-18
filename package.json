@@ -12,11 +12,12 @@
   "scripts": {
     "check": "node cli/ds.mjs check",
     "eval": "node cli/ds.mjs eval",
-    "test": "node --test cli/lib/*.test.mjs",
+    "test": "node scripts/run-tests.mjs",
     "build": "node cli/ds.mjs build",
     "catalog": "node cli/ds.mjs catalog",
     "doctor": "node cli/ds.mjs doctor",
-    "rules": "node cli/ds.mjs rules"
+    "rules": "node cli/ds.mjs rules",
+    "test:raw": "node --test cli/lib/*.test.mjs"
   },
   "keywords": [
     "pi-package",

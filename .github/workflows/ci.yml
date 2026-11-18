@@ -23,7 +23,8 @@ jobs:
       - name: 确定性层回归（行级 + 仓级）
         run: node cli/ds.mjs eval
       - name: 单测（含护栏、剥离器矩阵、install/publish/cross）
-        run: node --test cli/lib/*.test.mjs
+        # 不用 shell 展开 glob：Windows 的 pwsh 不会展开，两个平台行为会不一致
+        run: node scripts/run-tests.mjs
 
   # Windows 单独一条：路径分隔符、install.ps1、CRLF 相关分支只有这里能覆盖
   windows:
@@ -36,7 +37,7 @@ jobs:
       - name: 自检 + 单测
         run: |
           node cli/ds.mjs check
-          node --test cli/lib/*.test.mjs
+          node scripts/run-tests.mjs
       - name: 安装脚本 dry-run（不落盘）
         run: node cli/ds.mjs install --all --dry-run
       - name: PowerShell shim 可解析

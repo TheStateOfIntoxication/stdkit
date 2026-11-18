@@ -1,4 +1,4 @@
-// 纯函数单测：node --test cli/lib/
+// 纯函数单测：npm test（scripts/run-tests.mjs）
 import test from 'node:test';
 import assert from 'node:assert/strict';
 

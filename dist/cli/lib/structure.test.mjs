@@ -1,4 +1,4 @@
-// 结构与 CLI 层单测：node --test cli/lib/
+// 结构与 CLI 层单测：npm test（scripts/run-tests.mjs）
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -366,7 +366,9 @@ test('剥离器健壮性：随机拼片段不挂死、不抛错', () => {
     const f = scanText({ relPath: rel, text: lines.join('\n'), catalog: cat });
     const ms = Date.now() - t0;
     assert.ok(Array.isArray(f), `第 ${n} 例返回异常`);
-    assert.ok(ms < 200, `第 ${n} 例耗时 ${ms}ms，可能有死循环或回溯：${lines.join(' ⏎ ')}`);
+    // 这条断言要抓的是「死循环 / 灾难性回溯」，那会是秒级；给 2s 是为了不被 CI 的负载抖动打成红灯
+    // （200ms 在 2 核 runner 上并发跑三个测试文件时会偶发超时）。
+    assert.ok(ms < 2000, `第 ${n} 例耗时 ${ms}ms，可能有死循环或回溯：${lines.join(' ⏎ ')}`);
   }
 });
 
