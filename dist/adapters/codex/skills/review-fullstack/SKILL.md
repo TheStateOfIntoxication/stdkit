@@ -31,7 +31,7 @@ ds brief --diff            # 未安装 ds 则跳过，并在结论备注写「�
 `ds brief` 一次给出「A 类机械命中（含行号）」+「B 类需你判的规则清单」；
 只要原始命中时用 `ds scan --diff --json`。
 
-本次可机械判定的规则：`J8-API-04`、`J8-API-05`、`J8-CMT-02`、`J8-CON-02`、`J8-EXC-01`、`J8-LOG-01`、`J8-MBT-01`、`J8-MBT-02`、`J8-MBT-03`、`J8-MBT-04`、`J8-MBT-11`、`J8-MBT-13`、`J8-MOD-01`、`J8-SEC-01`、`J8-SEC-04`、`J8-SPR-01`、`J8-SPR-02`、`J8-SPR-05`、`J8-SPR-07`、`J8-SPR-10`、`J8-SPR-15`、`J8-STR-01`、`SQL-BAN-01`、`SQL-BAN-02`、`SQL-BAN-03`、`SQL-BAN-04`、`SQL-DIA-03`、`SQL-HDR-01`、`SQL-RSK-02`、`V2-API-01`、`V2-API-02`、`V2-API-04`、`V2-BASE-01`、`V2-BASE-02`、`V2-CMP-02`、`V2-CMP-03`、`V2-EVT-01`、`V2-EVT-02`、`V2-QLT-01`、`V2-QLT-02`、`V2-RTR-01`、`V2-SEC-01`、`V2-STY-01`、`V2-STY-02`。
+本次可机械判定的规则：`J8-API-04`、`J8-API-05`、`J8-CMT-02`、`J8-CON-02`、`J8-EXC-01`、`J8-LOG-01`、`J8-MBT-01`、`J8-MBT-02`、`J8-MBT-03`、`J8-MBT-04`、`J8-MBT-11`、`J8-MBT-13`、`J8-MOD-01`、`J8-SEC-01`、`J8-SEC-04`、`J8-SPR-01`、`J8-SPR-02`、`J8-SPR-05`、`J8-SPR-07`、`J8-SPR-10`、`J8-SPR-15`、`J8-STR-01`、`SQL-BAN-01`、`SQL-BAN-02`、`SQL-BAN-03`、`SQL-BAN-04`、`SQL-DIA-03`、`SQL-HDR-01`、`SQL-RSK-02`、`V2-API-01`、`V2-API-02`、`V2-API-04`、`V2-API-05`、`V2-BASE-01`、`V2-BASE-02`、`V2-CMP-02`、`V2-CMP-03`、`V2-EVT-01`、`V2-EVT-02`、`V2-QLT-01`、`V2-QLT-02`、`V2-RTR-01`、`V2-SEC-01`、`V2-STY-01`、`V2-STY-02`。
 命中项直接计入结论，**不要重新逐行去找它们**。
 
 仓级（文件集合层面，由命令判定，不在上面的逐行清单里）：
@@ -42,7 +42,7 @@ ds brief --diff            # 未安装 ds 则跳过，并在结论备注写「�
 
 ## 第二步：只审上下文类规则
 
-读本次 diff，对照下表逐条判断（共 71 条）。这些规则无法用正则判定，需要看调用链、数据关系、跨文件一致性：
+读本次 diff，对照下表逐条判断（共 70 条）。这些规则无法用正则判定，需要看调用链、数据关系、跨文件一致性：
 
 - `J8-API-01` Optional 只作返回值（high）
 - `J8-API-02` long/Long 拆箱必须判空（high）
@@ -105,7 +105,6 @@ ds brief --diff            # 未安装 ds 则跳过，并在结论备注写「�
 - `SQL-RSK-01` 按 L1 / L2 / L3 分级并写进「说明」（high）
 - `SQL-TYP-01` 类型按方言对照，不假设通用（medium）
 - `V2-API-03` 所有请求必须有错误处理（medium）
-- `V2-API-05` 接口调用抽到 api/ 目录（medium）
 - `V2-CMP-01` 组件文件 PascalCase，`name` 与文件名一致（medium）
 - `V2-CMP-04` 单文件不超过 500 行，超限拆分（medium）
 - `V2-CMP-05` 事件监听与定时器必须在 beforeDestroy 清理（high）

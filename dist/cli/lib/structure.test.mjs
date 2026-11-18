@@ -9,7 +9,7 @@ import { execFileSync } from 'node:child_process';
 import { ROOT, detectLayout } from './util.mjs';
 import { buildCatalog } from './catalog.mjs';
 import { buildFiles, isDistStale, refFiles } from './build.mjs';
-import { listFiles, runScan, globToRegExp, makeStripper, skipByPath, matchLine, scanText, stripLines, changedLines, GIT } from './scan.mjs';
+import { listFiles, runScan, globToRegExp, makeStripper, skipByPath, matchLine, scanText, stripLines, changedLines, capByMaxHits, GIT } from './scan.mjs';
 import { EXCEPTION_WORDING, runCheck, printCheck, rootStrayFiles } from './check.mjs';
 import { matchesDeclared, detectEngines } from './init.mjs';
 import { runPublishCheck, runHistoryCheck } from './publish.mjs';
@@ -705,4 +705,58 @@ test('publish-check --history：抓得到「提交过又删掉」的泄漏，all
   const allowed = runHistoryCheck(root, { forbidden: hist.length ? [{ id: 'private-ip', pattern: '\\b(?:10\\.\\d{1,3})\\.\\d{1,3}\\.\\d{1,3}\\b', why: 'x' }] : [], allowPaths: [], historyAllow: [{ id: 'private-ip', path: 'leak.md', reason: '测试' }] });
   assert.deepEqual(allowed, [], 'historyAllow 命中后应被排除');
   fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('capByMaxHits：计数型规则没超上限不报，超了只报越线那一处', () => {
+  const compiled = [
+    { rule: { id: 'X-ONE-01' } },
+    { rule: { id: 'X-CNT-01', maxHits: 2 } },
+  ];
+  const mk = (ruleId, line) => ({ ruleId, line, text: `hit${line}` });
+
+  // 普通规则：每一处都算
+  assert.deepEqual(capByMaxHits([mk('X-ONE-01', 1), mk('X-ONE-01', 2)], compiled).map((f) => f.line), [1, 2]);
+
+  // 计数型：1、2 处不报（没超过上限 2）
+  assert.deepEqual(capByMaxHits([mk('X-CNT-01', 1), mk('X-CNT-01', 2)], compiled), []);
+
+  // 超了：只报第 3 处，并在片段里标出「第 3 处（上限 2）」
+  const over = capByMaxHits([mk('X-CNT-01', 1), mk('X-CNT-01', 2), mk('X-CNT-01', 3)], compiled);
+  assert.equal(over.length, 1);
+  assert.equal(over[0].line, 3);
+  assert.match(over[0].text, /第 3 处（上限 2）/);
+
+  // 上限对每个规则各自生效，互不影响
+  const mixed = capByMaxHits([mk('X-ONE-01', 1), mk('X-CNT-01', 1), mk('X-CNT-01', 2), mk('X-CNT-01', 3)], compiled);
+  assert.deepEqual(mixed.map((f) => `${f.ruleId}@${f.line}`).sort(), ['X-CNT-01@3', 'X-ONE-01@1']);
+});
+
+test('scanText：maxHits 在护栏路径上同语义（同一份实现）', () => {
+  const catalog = {
+    rules: [
+      {
+        id: 'X-CNT-02',
+        title: '计数',
+        domain: 'vue',
+        file: 'fake.md',
+        line: 1,
+        level: 'must',
+        severity: 'medium',
+        tags: ['x'],
+        applies: ['**/*.vue'],
+        exclude: [],
+        deny: ['request\\.get\\('],
+        allow: [],
+        status: 'active',
+        raw: false,
+        noString: false,
+        maxHits: 2,
+      },
+    ],
+  };
+  const text = ['request.get(1)', 'request.get(2)'].join('\n');
+  assert.deepEqual(scanText({ relPath: 'a.vue', text, catalog }), [], '两处 ≤ 上限 2，不报');
+  const over = scanText({ relPath: 'a.vue', text: text + '\nrequest.get(3)', catalog });
+  assert.equal(over.length, 1);
+  assert.equal(over[0].line, 3);
 });

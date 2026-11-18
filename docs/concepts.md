@@ -55,7 +55,7 @@ policy/*.json ──────────┘（阻断阈值 + 单条降级）
 | 手段 | `deny` 正则，本机跑 | 条文正文，模型读 |
 | 成本 | 0 token，精确到行 | 要读调用链 |
 | 命令 | `ds scan` | `ds brief` 的 B 类清单 |
-| 数量 | 48 条 | 79 条 |
+| 数量 | 49 条 | 78 条 |
 
 `specific` 的分工细节见 `docs/architecture.md`。
 

@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, walk, readText, rel, readJSON, c, detectLayout } from './util.mjs';
-import { parseRules, DOMAINS, LEVELS, SEVERITIES, STATUSES, BOOLEAN_META, META_KEYS, codeFences, segments, compileRule } from './parse.mjs';
+import { parseRules, DOMAINS, LEVELS, SEVERITIES, STATUSES, BOOLEAN_META, NUMERIC_META, META_KEYS, codeFences, segments, compileRule } from './parse.mjs';
 import { globToRegExp } from './scan.mjs';
 import { isCatalogStale } from './catalog.mjs';
 import { isDistStale, buildFiles, collectPromptRuleIds, REVIEWS, SKILLS } from './build.mjs';
@@ -128,6 +128,14 @@ export function runCheck(root = ROOT) {
     for (const key of BOOLEAN_META) {
       if (meta[key] !== undefined && meta[key] !== 'true') at(`${key} 只能写 true，实际 "${meta[key]}"`);
     }
+    // 数值元数据：写成 0 / -1 / "5 处" 会被静默忽略，等于规则没生效
+    for (const key of NUMERIC_META) {
+      if (meta[key] === undefined) continue;
+      const n = Number(meta[key]);
+      if (!Number.isInteger(n) || n < 1) at(`${key} 必须是正整数，实际 "${meta[key]}"`);
+      else meta[key] = String(n);
+    }
+    if (meta.maxHits !== undefined && !meta.deny?.length) at('maxHits 只在有 deny 时有意义（没有正则就没有「命中次数」）');
     if (!meta.tags?.length) at('tags 不能为空');
     if (!meta.applies?.length) at('applies 不能为空');
     for (const [key, globs] of [['applies', meta.applies], ['exclude', meta.exclude]]) {
@@ -205,6 +213,24 @@ export function runCheck(root = ROOT) {
         const cost = Date.now() - t0;
         if (cost > 100)
           warn(file, line, `${id} ${key} 正则跑 2 万字符全 x 耗时 ${cost}ms，可能有回溯风险：${source}`);
+      }
+    }
+
+    // 计数型规则：BAD 样例里的命中数必须超过上限，否则这条规则演示不出自己的违规
+    if (meta.maxHits !== undefined && meta.deny?.length) {
+      const max = Number(meta.maxHits);
+      const compiled = meta.deny
+        .map((src) => {
+          try {
+            return compileRule(src);
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+      const badHits = segs.filter((x) => x.kind === 'bad' && compiled.some((re) => re.test(x.line))).length;
+      if (badHits <= max) {
+        err(file, line, `${id} maxHits: ${max}，但 // BAD 只命中 ${badHits} 处——样例本身演示不出「超过上限」`);
       }
     }
 

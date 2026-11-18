@@ -1,0 +1,11 @@
+{
+  "domain": "vue",
+  "$comment": "V2-API-05 是计数型规则（maxHits: 4）：pay/index.vue 有 5 处原始请求 → 只报第 5 处（line 15）；order/index.vue 恰好 4 处 → 一处都不报（验证上限是「超过」而不是「达到」）",
+  "findings": [
+    {
+      "ruleId": "V2-API-05",
+      "file": "src/views/pay/index.vue",
+      "line": 15
+    }
+  ]
+}

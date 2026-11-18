@@ -1,6 +1,6 @@
 {
   "name": "stdkit",
-  "version": "0.17.3",
+  "version": "0.18.0",
   "description": "JDK 8 / Vue 2 / SQL 工程规范与审查工具包：规则一次编写，Agent 产物全生成，能机器判定的一律机器判。",
   "type": "module",
   "bin": {

@@ -23,6 +23,7 @@
 | `V2-QLT-01` console / debugger | ESLint（`no-console`、`no-debugger`） | `ds scan` 兜底 |
 | `V2-BASE-01` 禁 script setup | ESLint（`vue/no-*` / 自定义） | `ds scan` 兜底 |
 | `J8-SPR-03` 事务内远程、`J8-SPR-12` 幂等、`J8-SEC-05` 越权 | **只能人 / 模型** | `ds brief` 把它们列进 B 类清单 |
+| `V2-API-05` 页面里原始请求超过 4 处 | **`ds scan`（计数型）**：`deny` + `maxHits: 4`，只报越线那一处 |
 | `SQL-DIA-01` 全量方言集 | **`ds cross`**（仓级：比对方言目录与脚本序号） |
 
 ## 怎么用

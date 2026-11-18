@@ -1,6 +1,6 @@
 {
   "name": "stdkit-dist",
-  "version": "0.17.3",
+  "version": "0.18.0",
   "private": true,
   "description": "stdkit 生成产物：127 条规则的 skills / prompts / cli / 客户端适配器。勿手改，改 rules/ 后跑 ds build。",
   "type": "module",

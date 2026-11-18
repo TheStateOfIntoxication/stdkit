@@ -15,7 +15,9 @@ export const SEVERITIES = ['critical', 'high', 'medium', 'low'];
 export const STATUSES = ['active', 'retired'];
 /** 布尔开关类元数据：只能写 true，写 yes/1 会被当未知值静默忽略。 */
 export const BOOLEAN_META = ['raw', 'noString'];
-export const META_KEYS = ['level', 'severity', 'tags', 'applies', 'exclude', 'p3c', 'see', 'deny', 'allow', 'status', 'raw', 'noString'];
+export const META_KEYS = ['level', 'severity', 'tags', 'applies', 'exclude', 'p3c', 'see', 'deny', 'allow', 'status', 'raw', 'noString', 'maxHits'];
+/** 数值类元数据：写成非正整数会被 check 点名（静默忽略等于规则没生效）。 */
+export const NUMERIC_META = ['maxHits'];
 
 const HEADING = /^###\s+([A-Z][A-Z0-9]*-[A-Z][A-Z0-9]*-\d{2})\s+(.+?)\s*$/;
 const ANY_HEADING = /^#{1,3}\s/;

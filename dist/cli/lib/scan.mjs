@@ -654,6 +654,38 @@ export function matchLine(compiled, relPath, rawLine, lineNo, waivers, stripped,
   return out;
 }
 
+/**
+ * 计数型规则的收口（`maxHits`）：同一文件里某规则命中超过上限时，**只保留越线那一处**。
+ *
+ * 为什么要它：有些规范说的是「数量」而不是「形态」——「一个页面里出现 5 个以上原始请求就抽到
+ * api/」「一个组件里 3 处以上内联样式」这类，单行正则能判，但判据是次数。以前只能留给模型，
+ * 现在规则写 `maxHits: 4` 就是「允许 4 处，第 5 处起报」。
+ *
+ * 只报越线那一处（而不是把第 5、6、7 处全报一遍）：一条已经说明问题的命中，重复刷没有信息量。
+ */
+export function capByMaxHits(findings, compiled) {
+  const byRule = new Map();
+  for (const f of findings) {
+    if (!byRule.has(f.ruleId)) byRule.set(f.ruleId, []);
+    byRule.get(f.ruleId).push(f);
+  }
+  const out = [];
+  for (const [ruleId, list] of byRule) {
+    const c = compiled.find((x) => x.rule.id === ruleId);
+    const max = Number(c?.rule?.maxHits);
+    if (!Number.isFinite(max)) {
+      // 普通规则：每一处命中都算
+      out.push(...list);
+      continue;
+    }
+    // 计数型规则：**没超过上限就不算违规**（这是与普通规则最大的区别）；超了只报越线那一处
+    if (list.length <= max) continue;
+    const over = list[max];
+    out.push({ ...over, text: `${over.text}   ← 本文件第 ${max + 1} 处（上限 ${max}）` });
+  }
+  return out;
+}
+
 /** 内存文本扫描：给 pi 写前护栏用，避免第二套判定。 */
 export function scanText({ relPath, text, catalog, baseline, policy, mask = true }) {
   const compiled = compileRules(catalog, { policy });
@@ -668,7 +700,7 @@ export function scanText({ relPath, text, catalog, baseline, policy, mask = true
       if (!waiver || expired) findings.push(found);
     }
   });
-  return findings;
+  return capByMaxHits(findings, compiled);
 }
 
 /**
@@ -705,6 +737,8 @@ export function runScan({ target, catalog, domain, severity, diffRef, baseline, 
     const strippedLines = stripLines(file, lines);
     const limit = diff ? diff.get(file) : null;
 
+    // 先收到本文件的局部数组：maxHits 是「同一文件内」的判据，不能拿全局 hits 比
+    const fileFindings = [];
     lines.forEach((src, idx) => {
       const lineNo = idx + 1;
       if (limit && !limit.has(lineNo)) return;
@@ -715,9 +749,10 @@ export function runScan({ target, catalog, domain, severity, diffRef, baseline, 
           if (expired) expiredWaivers.add(`${waiver.ruleId}@${waiver.file ?? '*'}`);
           else waived.push({ ...found, waiver: waiver.reason ?? '' });
         }
-        if (!waiver || expired) findings.push(found);
+        if (!waiver || expired) fileFindings.push(found);
       }
     });
+    findings.push(...capByMaxHits(fileFindings, hit));
   }
 
   const order = { critical: 0, high: 1, medium: 2, low: 3 };

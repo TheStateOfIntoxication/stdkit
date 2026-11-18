@@ -32,6 +32,8 @@ export function buildCatalog(root = ROOT) {
     status: r.meta?.status ?? 'active',
     raw: r.meta?.raw === 'true',
     noString: r.meta?.noString === 'true',
+    // 计数型规则：同一文件命中超过 maxHits 处才算违规（缺省 = 每命中一处都算）
+    ...(r.meta?.maxHits ? { maxHits: Number(r.meta.maxHits) } : {}),
   }));
   rules.sort((a, b) => a.id.localeCompare(b.id));
   const version = readJSON(path.join(root, 'package.json'), {})?.version ?? '0.0.0';

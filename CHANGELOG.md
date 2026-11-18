@@ -5,6 +5,29 @@
 **版本策略**：`0.x` 期间结构可能变（`catalog` 字段、`policy` 键名、`--fail-on` 语义）；
 升 `1.0.0` 的触发条件是这三处冻结、且连续两个版本无 breaking。
 
+## [0.18.0] — 2026-11-17
+
+### Added
+
+- **计数型规则 `maxHits`**：有些规范的判据是**次数**而不是形态（「同一页面 5 个以上原始请求必须抽到
+  `api/`」）。规则写 `deny` + `maxHits: 4` = 「允许 4 处，第 5 处起报」，且只报越线那一处。
+  `runScan` 与写前护栏 `scanText` 共用 `capByMaxHits`，不存在第二套判定。
+  `ds check` 三条约束：必须在有 `deny` 时使用、必须是正整数、`// BAD` 命中数必须超过上限。
+- **`V2-API-05` 从语义规则变成可机判**：`deny`（`request|http|api|axios` 的动词调用 + `this.$http.*`）
+  + `maxHits: 4`。它因此自动从 prompt 的 B 类挪进「可机械判定」，`ds brief` 也算进 A 类。
+- 新 fixture `evals/cases/vue-api-05`：5 处请求的页面报第 15 行；**恰好 4 处**的页面一处都不报
+  （验证上限是「超过」而不是「达到」）。
+
+### Changed
+
+- 可机判规则 48 → **49**（README / limits / concepts / architecture 同步；ADR 属历史记录不动）。
+- `docs/rule-format.md` 增 `maxHits` 元数据行与正则规则第 10 条；`static-analysis.md` 落点表补一行；
+  `limits.md` 写明「计数型只按单文件计，跨文件同一接口归人工审查」。
+
+### 测试
+
+- 49 → **51**：`capByMaxHits` 语义（未超不报 / 超了只报越线一处 / 普通规则不受影响）与 `scanText` 同语义。
+
 ## [0.17.3] — 2026-11-17
 
 四次审计（`08-四次审计-v0.17.2-剩余问题.md`）的 N40–N44。这轮的核心是**「历史泄漏」这种不可撤回的坑**：

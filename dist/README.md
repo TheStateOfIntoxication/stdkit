@@ -1,6 +1,6 @@
 # stdkit dist（生成物，勿手改）
 
-由 `ds build` 从 `rules/` + `policy/` 生成。版本 v0.17.3，127 条规则。
+由 `ds build` 从 `rules/` + `policy/` 生成。版本 v0.18.0，127 条规则。
 
 改条文请改仓库根 `rules/`，然后 `node cli/ds.mjs build && node cli/ds.mjs check`。
 
@@ -21,7 +21,7 @@ dist/
 
 ## 已知限制（先知道再装）
 
-- **只有 48/127 条能自动判**：其余靠模型读条文；条文里写「需人工确认」的就是机器抓不到的，**没报不等于没问题**。
+- **只有 49/127 条能自动判**：其余靠模型读条文；条文里写「需人工确认」的就是机器抓不到的，**没报不等于没问题**。
 - **单栈**：只覆盖 JDK 8 + Vue 2（Options API）。JDK 17 / Vue 3 / TypeScript 没有规则域，接入会看到成片误报。
 - **不替代 review**：判的是形态（`private double amount;`），判不了「这个事务边界对不对」。
 - **护栏只拦 critical**，且覆盖不到 pi 的注册与事件路由（只能由宿主验证）。
