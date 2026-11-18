@@ -15,7 +15,7 @@ import { planInstall, applyInstall, uninstall, installPi } from './lib/install.m
 import { runCrossCheck } from './lib/cross.mjs';
 import { loadPolicy, resolveFailOn, SEVERITY_ORDER, effectiveSeverity } from './lib/policy.mjs';
 import { SEVERITIES, LEVELS } from './lib/parse.mjs';
-import { ROOT, c, writeJSON } from './lib/util.mjs';
+import { ROOT, c, writeJSON, UsageError } from './lib/util.mjs';
 
 const HELP = `stdkit · ds
 
@@ -174,18 +174,18 @@ function readTextSafe(p, fallback) {
 
 function assertSeverity(severity) {
   if (!severity) return;
-  if (!SEVERITIES.includes(severity)) throw new Error(`--severity "${severity}" 不存在（可用：${SEVERITIES.join(', ')}）`);
+  if (!SEVERITIES.includes(severity)) throw new UsageError(`--severity "${severity}" 不存在（可用：${SEVERITIES.join(', ')}）`);
 }
 
 function assertLevel(level) {
   if (!level) return;
-  if (!LEVELS.includes(level)) throw new Error(`--level "${level}" 不存在（可用：${LEVELS.join(', ')}）`);
+  if (!LEVELS.includes(level)) throw new UsageError(`--level "${level}" 不存在（可用：${LEVELS.join(', ')}）`);
 }
 
 function assertDomain(domain) {
   if (!domain) return;
   const known = buildCatalog(ROOT).domains;
-  if (!known.includes(domain)) throw new Error(`--domain "${domain}" 不存在（可用：${known.join(', ')}）`);
+  if (!known.includes(domain)) throw new UsageError(`--domain "${domain}" 不存在（可用：${known.join(', ')}）`);
 }
 
 function flags(args) {
@@ -202,7 +202,7 @@ function flags(args) {
     if (VALUE_FLAGS.has(name)) {
       const value = eq > 0 ? a.slice(eq + 1) : args[++i];
       if (value === undefined || value === '' || (value.startsWith('--') && eq < 0)) {
-        throw new Error(`参数 ${name} 缺少取值`);
+        throw new UsageError(`参数 ${name} 缺少取值`);
       }
       if (name === '--tag') out.tags.push(value);
       // 枚举型取值宽容大小写：--severity HIGH / --level MUST 照常用，拼错（HIGHT）仍然报错
@@ -216,7 +216,7 @@ function flags(args) {
       else out.diff = 'HEAD';
       continue;
     }
-    if (a.startsWith('-')) throw new Error(`未知参数 ${a}`);
+    if (a.startsWith('-')) throw new UsageError(`未知参数 ${a}`);
     out.positional.push(a);
   }
   return out;
@@ -233,7 +233,7 @@ function scan(args) {
   assertSeverity(f.severity);
   // 参数先校验再干活，避免打了一半结果才报错
   const limit = f.limit === undefined ? 200 : Number(f.limit);
-  if (!Number.isFinite(limit) || limit < 0) throw new Error(`--limit 需要非负整数，收到 "${f.limit}"`);
+  if (!Number.isFinite(limit) || limit < 0) throw new UsageError(`--limit 需要非负整数，收到 "${f.limit}"`);
   const blockOn = resolveFailOn(f['fail-on'], policy);
   const { findings, scanned, rules, totalRules, waived, expiredWaivers } = runScan({
     target,
@@ -568,5 +568,6 @@ function listRules(args) {
 
 main().catch((e) => {
   console.error(c.red(e.message || e));
-  process.exit(1);
+  // 用法错误 = 2：与「有阻断命中」(1) 分开，否则 CI 里拼错参数会被当成代码问题
+  process.exit(e instanceof UsageError || e?.usage ? 2 : 1);
 });

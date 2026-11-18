@@ -532,6 +532,12 @@ test('CLI：--domain 校验、--severity 计数收敛、init --dry-run 不落盘
   assert.ok(one.rules < full.totalRules, `--severity 应缩小参与匹配的规则数：${one.rules} / ${full.totalRules}`);
   assert.equal(one.findings.length, 0, 'double amount 是 critical，不应出现在 --severity high 的结果里');
 
+  // 退出码契约：用法错误 = 2，与「有阻断命中」= 1 必须分开（否则 CI 里拼错参数会被当成代码问题）
+  for (const args of [['scan', root, '--severity', 'hight'], ['scan', root, '--domain', 'ts'], ['scan', root, '--nope'], ['scan', root, '--limit', 'abc'], ['frobnicate']]) {
+    assert.equal(run(args).code, 2, `用法错误应以 2 退出：${args.join(' ')}`);
+  }
+  assert.equal(run(['scan', root]).code, 1, '命中 critical 应以 1 退出（与用法错误区分）');
+
   const dry = run(['init', root, '--dry-run']);
   assert.equal(dry.code, 0);
   assert.ok(!fs.existsSync(path.join(root, 'AGENTS.md')), 'init --dry-run 不应写文件');

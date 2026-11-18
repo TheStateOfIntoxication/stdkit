@@ -1,7 +1,7 @@
 // policy：默认策略 ← profile ← 业务仓覆盖。三层，后者只覆盖列出的键。
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, readJSON } from './util.mjs';
+import { ROOT, readJSON, UsageError } from './util.mjs';
 
 export const SEVERITY_ORDER = ['low', 'medium', 'high', 'critical'];
 
@@ -11,7 +11,7 @@ export function loadPolicy(root = ROOT, { profile, target } = {}) {
     const prof = readJSON(path.join(root, 'policy', 'profiles', `${profile}.json`), null);
     if (!prof) {
       const names = listProfiles(root);
-      throw new Error(`找不到 profile "${profile}"（可用：${names.join(', ') || '无'}）`);
+      throw new UsageError(`找不到 profile "${profile}"（可用：${names.join(', ') || '无'}）`);
     }
     policy = { ...policy, ...prof };
   }
@@ -46,7 +46,7 @@ export function resolveFailOn(value, policy) {
         .filter(Boolean)
     : levels;
   const unknown = asked.filter((s) => !SEVERITY_ORDER.includes(s));
-  if (unknown.length) throw new Error(`阻断级别取值非法：${unknown.join(', ')}（可用：${SEVERITY_ORDER.join(' / ')}）`);
+  if (unknown.length) throw new UsageError(`阻断级别取值非法：${unknown.join(', ')}（可用：${SEVERITY_ORDER.join(' / ')}）`);
   const lowest = asked.reduce((a, b) => (SEVERITY_ORDER.indexOf(b) < SEVERITY_ORDER.indexOf(a) ? b : a), asked[0]);
   const idx = SEVERITY_ORDER.indexOf(lowest);
   return new Set(SEVERITY_ORDER.slice(idx));

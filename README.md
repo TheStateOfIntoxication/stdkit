@@ -68,6 +68,7 @@ critical 1 · high 1   共 2
 | [docs/static-analysis.md](docs/static-analysis.md) | 静态分析的边界：哪些形态抓不到 |
 | [docs/provenance.md](docs/provenance.md) | 规则来源与原创性声明 |
 | [docs/publish-checklist.md](docs/publish-checklist.md) | 发布前检查清单（含脱敏） |
+| [docs/v1-freeze-review.md](docs/v1-freeze-review.md) | **1.0 冻结评估**：catalog / policy / --fail-on 三处契约的现状、死键与冻结前必做项 |
 | [docs/adr/](docs/adr/) | 架构决策记录：跨文件层只做两条、不做 Vue3/JDK17、语义层回归不进 CI |
 
 ## 先知道的三个限制

@@ -5,6 +5,33 @@
 **版本策略**：`0.x` 期间结构可能变（`catalog` 字段、`policy` 键名、`--fail-on` 语义）；
 升 `1.0.0` 的触发条件是这三处冻结、且连续两个版本无 breaking。
 
+## [0.19.2] — 2026-11-18
+
+### Fixed（契约级）
+
+- **用法错误原来返回 exit 1，与「有阻断命中」无法区分**：`--severity hight`、`--domain ts`、
+  `--limit abc`、未知参数、未知子命令全部返回 1。CI 只看退出码，于是「命令拼错」会被当成「代码有问题」。
+  新增 `UsageError`（`cli/lib/util.mjs`）：`flags()` / `assert*` / `resolveFailOn` / `loadPolicy` 的
+  用法错误都改抛它，顶层 catch 映射到 **exit 2**。现在三档契约成立：
+  **0 通过 · 1 有阻断/失败 · 2 用法或环境错误**（`docs/commands.md` 写成表格，并说明为什么要分开）。
+- 回归：CLI 测试里加了 5 种用法错误必须 exit 2，以及「命中 critical 必须 exit 1」。
+
+### Added
+
+- **`docs/v1-freeze-review.md`（1.0 冻结评估）**：逐条查过读取方之后，三个公开契约的真实状态：
+  - `--fail-on`：✅ 可冻（阈值语义 + 逗号列表取最宽松 + 默认取 `blockOn`，有测试）；
+  - `catalog/rules.json`：⚠️ 加一个 `schema: 1` 后可冻（现在 `version` 是 stdkit 版本，不是数据格式版本）；
+  - `policy/*.json`：❌ 现在冻会把死键冻成契约——`domains` / `extends` / `version` / `stack` 都**没有读取方**，
+    `warnOn` 只影响 prompt 文案；`.stdkit/policy.json` 也没有键白名单（拼错键名静默不生效）。
+  文档给出「冻结前必做 7 项」（含已完成的退出码修复）、机制建议（`policy/compat.json` 形状快照 +
+  `compat.test.mjs`，只断言键存在与类型不变）、冻结后能做/不能做的对照表，最后是 5 个待决策项。
+- README 文档索引补该文档。
+
+### 验证
+
+- `check` 0/0、`eval` 23/23、`eval --semantic` 2/2、`test` 54/54、`doctor` 0 fail
+- 退出码矩阵实测：7 种用法错误全为 2；`scan java-bad` 为 1；其余正常命令为 0
+
 ## [0.19.1] — 2026-11-18
 
 五次审计（`09-五次审计-v0.19.0-剩余问题.md`）的 N50–N55。核心是一条 P1：**新升格的机判规则在主路径上不响**。

@@ -1,6 +1,6 @@
 {
   "name": "stdkit",
-  "version": "0.19.1",
+  "version": "0.19.2",
   "description": "stdkit 工程规范：127 条规则（JDK8 / Vue2 / SQL）；写走 skills，审走 /review-* 手动命令。",
   "license": "MIT",
   "keywords": [

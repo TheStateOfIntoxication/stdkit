@@ -31,6 +31,21 @@ export function detectLayout(root = ROOT) {
   return hasCatalog && hasCli ? 'dist-install' : 'unknown';
 }
 
+/**
+ * 用法 / 环境错误（参数写错、profile 不存在…），与「有命中」区分开。
+ *
+ * 为什么重要：CI 门禁只看退出码。参数拼错若也返回 1，就与「发现了阻断级问题」无法区分——
+ * 于是「--severity hight 拼错」会被当成「代码有问题」，人去查代码，实际是命令写错了。
+ * 约定：0 = 通过；1 = 有阻断/失败；2 = 用法或环境错误。
+ */
+export class UsageError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'UsageError';
+    this.usage = true;
+  }
+}
+
 export const readText = (p) => fs.readFileSync(p, 'utf8').replace(/^\uFEFF/, '');
 
 export const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');

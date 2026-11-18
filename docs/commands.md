@@ -21,8 +21,16 @@
 | `version` | 版本 + 规则数（也可写 `--version`） |
 | `help` | 帮助 |
 
-退出码：`check` 有 error → 1；`eval` 有用例失败或有未覆盖规则 → 1；`doctor` 有 FAIL → 1；
-`scan` 命中阻断级别 → 1；`publish-check` 有命中 → 1。
+**退出码是给 CI 的契约**，三档，不要混：
+
+| 码 | 含义 | 典型场景 |
+|---|---|---|
+| **0** | 通过 | 无命中；`check` 在 dist 安装下「跳过」；`check`/`eval` 无问题 |
+| **1** | 有阻断 / 失败 | `scan` 命中阻断级、`check` 有 error、`eval` 有失败或未覆盖、`doctor` 有 FAIL、`publish-check` 有命中 |
+| **2** | **用法或环境错误** | 参数拼错（`--severity hight`）、未知参数/子命令、`--limit abc`、profile 不存在、`check` 指到既非规则仓也非 dist 的目录、git 缺失时的 `--diff` |
+
+为什么要分开：CI 只看退出码。若「参数拼错」也返回 1，就和「发现了阻断级问题」无法区分——
+人会去查代码，而实际是命令写错了。
 
 ## check
 
