@@ -104,12 +104,12 @@ policy/default.json  ←  policy/profiles/<name>.json  ←  <业务仓>/.stdkit/
 | # | 事项 | 为什么必须在 1.0 前 | 工时 |
 |---|---|---|---|
 | 1 | ~~用法错误 → exit 2~~ | ✅ **本轮已修**（`UsageError` + 顶层 catch；`commands.md` 写成三档契约；测试覆盖 5 种用法错误） | 已做 |
-| 2 | **删 `policy.domains` / `extends`** | 死键冻结后就成了"以后必须一直支持"的负担；且它们是「写了不生效」的教科书案例 | 0.1d |
-| 3 | **`policy.version` 加校验**（`check` 断言 `=== 1`） | 否则 policy 格式变了没人知道；顺手让这个键变成活的 | 0.1d |
-| 4 | **`catalog.schema: 1`** | 外部工具需要判断数据格式；`version` 是产品版本，不能兼职 | 0.1d |
-| 5 | **`.stdkit/policy.json` 白名单校验**（未知键 → error） | 拼错键名静默不生效是本仓反复踩过的坑（`status: retird`、`raw: yes`、`historyAllow` 拼错） | 0.2d |
-| 6 | `warnOn` 语义写清 | 它只影响 prompt 文案；不写清会被当成"把某级变成 warning"的开关 | 0.05d |
-| 7 | `policy.stack` 明确为「文档性」或删 | 同上：没有读取方的东西不该长得像配置 | 0.05d |
+| 2 | **删 `policy.domains` / `extends`** | 死键冻结后就成了"以后必须一直支持"的负担；且它们是「写了不生效」的教科书案例 | ✅ 0.20.0 |
+| 3 | **`policy.version` 加校验**（`check` 断言 `=== 1`） | 否则 policy 格式变了没人知道；顺手让这个键变成活的 | ✅ 0.20.0 |
+| 4 | **`catalog.schema: 1`** | 外部工具需要判断数据格式；`version` 是产品版本，不能兼职 | ✅ 0.20.0 |
+| 5 | **`.stdkit/policy.json` 白名单校验**（未知键 → error） | 拼错键名静默不生效是本仓反复踩过的坑（`status: retird`、`raw: yes`、`historyAllow` 拼错） | ✅ 0.20.0 |
+| 6 | `warnOn` 语义写清 | 它只影响 prompt 文案；不写清会被当成"把某级变成 warning"的开关 | ✅ 0.20.0 |
+| 7 | `policy.stack` 明确为「文档性」或删 | 同上：没有读取方的东西不该长得像配置 | ✅ 0.20.0（保留 + 注释写清） |
 
 > 2/3/4/6/7 是**删或注明**，5 是**加校验**。做完之后三个表面才谈得上「冻」。
 
@@ -165,5 +165,5 @@ policy/default.json  ←  policy/profiles/<name>.json  ←  <业务仓>/.stdkit/
 
 ---
 
-**做完 §4 的 2–7 之后**，这份评估的结论会变成：三处都能冻，机制是 `policy/compat.json` + `compat.test.mjs` + ADR 0004。
-在那之前打 1.0 的 tag，会把「死键」和「没有 schema 版本的数据格式」一起冻进公开契约。
+**§4 已全部完成（0.20.0）**：三处都能冻了，机制是 `policy/compat.json` + `cli/lib/compat.test.mjs` + ADR 0004。
+现在的破坏性变更会让 `npm test` 红，并在报错里直接给出三步升级流程（改大版本 / 改快照 / 写 ADR）。

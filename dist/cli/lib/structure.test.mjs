@@ -12,6 +12,7 @@ import { buildFiles, isDistStale, refFiles } from './build.mjs';
 import { listFiles, runScan, globToRegExp, makeStripper, skipByPath, matchLine, scanText, stripLines, changedLines, capByMaxHits, GIT } from './scan.mjs';
 import { EXCEPTION_WORDING, runCheck, printCheck, rootStrayFiles } from './check.mjs';
 import { matchesDeclared, detectEngines } from './init.mjs';
+import { loadPolicy } from './policy.mjs';
 import { runPublishCheck, runHistoryCheck } from './publish.mjs';
 import { planInstall, applyInstall } from './install.mjs';
 import { runCrossCheck } from './cross.mjs';
@@ -870,4 +871,31 @@ test('runScan --diff + maxHits：越线行在改动内才报（--diff 主路径�
   const r2 = runScan({ target: root, catalog: buildCatalog(ROOT), diffRef: 'HEAD' });
   assert.deepEqual(r2.findings.filter((f) => f.ruleId === 'V2-API-05'), [], '只改注释不该报越线');
   fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('policy 键白名单：拼错键名/非法 version/单仓写 stack 都直接报错', () => {
+  const repo = tmpdir();
+  const target = tmpdir();
+  fs.mkdirSync(path.join(target, '.stdkit'), { recursive: true });
+  const write = (obj) =>
+    fs.writeFileSync(path.join(target, '.stdkit', 'policy.json'), JSON.stringify(obj));
+
+  // 合法：只覆盖 severity（长期降级）
+  write({ severity: { 'J8-API-04': 'medium' } });
+  assert.equal(loadPolicy(ROOT, { target }).severity['J8-API-04'], 'medium');
+
+  // 拼错键名（blockon）→ 报错；否则就是「配了但没生效」的经典坑
+  write({ blockon: ['critical'] });
+  assert.throws(() => loadPolicy(ROOT, { target }), /未知键.*blockon/);
+
+  // stack 只属于 profile，单仓覆盖不许写
+  write({ stack: { java: 8 } });
+  assert.throws(() => loadPolicy(ROOT, { target }), /未知键.*stack/);
+
+  // 非法 version
+  write({ version: 9 });
+  assert.throws(() => loadPolicy(ROOT, { target }), /version=9/);
+
+  fs.rmSync(repo, { recursive: true, force: true });
+  fs.rmSync(target, { recursive: true, force: true });
 });

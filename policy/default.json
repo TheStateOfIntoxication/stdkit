@@ -1,7 +1,12 @@
 {
-  "$comment": "默认策略。业务仓可用 .stdkit/policy.json 覆盖同名键（已实现：loadPolicy）；--profile <name> 加载 policy/profiles/<name>.json。blockOn / warnOn 均为阈值语义（该级及以上）。",
+  "$comment": "默认策略。三层覆盖（浅合并，后者整体替换同名键）：default ← profiles/<name>（--profile）← <业务仓>/.stdkit/policy.json。version 是策略文件格式版本（ds check 断言 === 1，改格式要同时改 policy/compat.json）。blockOn 是阈值语义（该级及以上阻断）。warnOn 只用于生成 prompt 里的一句话，不参与判定。未知键会被 ds scan / ds doctor 直接报错（避免「写了不生效」）。",
   "version": 1,
-  "blockOn": ["critical", "high"],
-  "warnOn": ["medium", "low"],
-  "domains": ["java-jdk8", "vue", "sql", "test"]
+  "blockOn": [
+    "critical",
+    "high"
+  ],
+  "warnOn": [
+    "medium",
+    "low"
+  ]
 }

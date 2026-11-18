@@ -1,0 +1,41 @@
+{
+  "$comment": "1.0 的公开契约形状快照（只锁形状，不锁内容）。破坏性变更要：改大版本 + 改本文件 + 写 ADR。由 cli/lib/compat.test.mjs 守住。",
+  "schemaVersion": 1,
+  "catalog": {
+    "schema": 1,
+    "rootKeys": ["$comment", "schema", "version", "domains", "counts", "rules"],
+    "ruleRequired": [
+      "id",
+      "title",
+      "domain",
+      "file",
+      "line",
+      "anchor",
+      "level",
+      "severity",
+      "tags",
+      "applies",
+      "exclude",
+      "p3c",
+      "see",
+      "deny",
+      "allow",
+      "status",
+      "raw",
+      "noString"
+    ],
+    "ruleOptional": ["maxHits"]
+  },
+  "policy": {
+    "version": 1,
+    "keys": ["version", "blockOn", "warnOn", "severity"],
+    "profileKeys": ["version", "blockOn", "warnOn", "severity", "stack"],
+    "overrideKeys": ["version", "blockOn", "warnOn", "severity"]
+  },
+  "exitCodes": { "pass": 0, "blocked": 1, "usage": 2 },
+  "semantics": [
+    "blockOn / --fail-on 是阈值语义（该级及以上），逗号列表取最宽松那一级；不是精确集合",
+    "policy 三层覆盖是浅合并：后者整体替换同名键，不做深合并",
+    "catalog 的 applies 是相对业务仓根的 glob（不是绝对路径）"
+  ]
+}

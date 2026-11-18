@@ -341,6 +341,20 @@ policy/profiles/<name>.json    ← --profile 指定
 写错 ID 或非法级别，`ds check` / `ds doctor` 都会报错点名。**降级 vs 豁免**：
 降级是「这条在本仓就该是 medium」（长期、无到期日）；豁免是「历史代码这次不动」（必须写 `until`）。
 
+**允许的键**（三层各有白名单，写错直接报错——拼错的键是「配了但没生效」的经典来源）：
+
+| 层 | 允许的键 |
+|---|---|
+| `policy/default.json` / `profiles/<name>.json` | `version` / `blockOn` / `warnOn` / `severity`（profile 另可写 `stack`） |
+| `<业务仓>/.stdkit/policy.json` | `version` / `blockOn` / `warnOn` / `severity`（**不允许 `stack`**：那是 profile 的结构性字段） |
+
+- `version` 是策略文件格式版本，当前只支持 `1`（`ds check` 会断言）。
+- **`warnOn` 只用于生成 prompt 里的一句话**（「这一级算 Warning」），不参与任何判定——它不是「把某级变成 warning」的开关。
+- profile 的 `stack` 是**给人看的**：没有任何判定读它（ADR 0002 明确不做多栈，写成配置会误导）。
+- 三层覆盖是**浅合并**：后者整体替换同名键，不做深合并。
+
+契约的形状由 `policy/compat.json` + `cli/lib/compat.test.mjs` 守着（见 [ADR 0004](adr/0004-v1-freeze.md)）。
+
 ## 环境变量
 
 | 变量 | 用途 |

@@ -4,6 +4,9 @@ import path from 'node:path';
 import { ROOT, writeJSON, readJSON } from './util.mjs';
 import { parseRules } from './parse.mjs';
 
+/** catalog 数据格式版本。改字段形状（改名/删键/改类型）时 +1，并同步 policy/compat.json。 */
+export const CATALOG_SCHEMA = 1;
+
 export const CATALOG_PATH = path.join(ROOT, 'catalog', 'rules.json');
 const CATALOG_PATH_FOR = (root) => path.join(root, 'catalog', 'rules.json');
 
@@ -40,6 +43,9 @@ export function buildCatalog(root = ROOT) {
   const domains = [...new Set(rules.map((r) => r.domain))].sort();
   return {
     $comment: '生成物，勿手改。node cli/ds.mjs catalog',
+    // schema 是**数据格式**版本（外部工具据此判断能否解析）；version 是 stdkit 产品版本。
+    // 两者混用会让外部工具无法判断「我读的是不是我能读的格式」（见 docs/v1-freeze-review.md）。
+    schema: CATALOG_SCHEMA,
     version,
     domains,
     counts: countBy(rules),

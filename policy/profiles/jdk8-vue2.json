@@ -1,12 +1,16 @@
 {
-  "$comment": "JDK8 + Vue2 存量仓 profile：以 default 为基，只覆盖列出的键。用法：ds scan --profile jdk8-vue2",
-  "extends": "default",
+  "$comment": "JDK8 + Vue2 存量仓 profile：以 default 为基，只覆盖列出的键（浅合并）。用法：ds scan --profile jdk8-vue2。stack 是**给人看的**（没有任何判定读它）——不要以为写在这里会让规则按版本分叉，ADR 0002 明确不做多栈。",
   "version": 1,
+  "blockOn": [
+    "critical",
+    "high"
+  ],
   "stack": {
     "java": 8,
     "vue": 2,
-    "engines": ["mysql", "kingbase"]
-  },
-  "blockOn": ["critical", "high"],
-  "domains": ["java-jdk8", "vue", "sql", "test"]
+    "engines": [
+      "mysql",
+      "kingbase"
+    ]
+  }
 }

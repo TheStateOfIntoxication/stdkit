@@ -5,19 +5,46 @@ import { ROOT, readJSON, UsageError } from './util.mjs';
 
 export const SEVERITY_ORDER = ['low', 'medium', 'high', 'critical'];
 
+/** 策略文件允许的键。加键要同时改 policy/compat.json（1.0 起由 compat.test.mjs 守住）。 */
+export const POLICY_KEYS = ['version', 'blockOn', 'warnOn', 'severity'];
+export const PROFILE_KEYS = [...POLICY_KEYS, 'stack'];
+/** 业务仓覆盖只允许影响判定的键：profile 的结构性字段（stack）不该在单仓里改写。 */
+export const OVERRIDE_KEYS = ['version', 'blockOn', 'warnOn', 'severity'];
+export const POLICY_VERSION = 1;
+
+const META_KEYS = new Set(['$comment']);
+
+/** 未知键 / 非法 version → 抛 UsageError（配置写错属于「环境错误」，exit 2，不是「有命中」）。 */
+export function validatePolicyShape(policy, { where = 'policy', allowed = POLICY_KEYS } = {}) {
+  if (!policy || typeof policy !== 'object') throw new UsageError(`${where} 不是对象`);
+  const unknown = Object.keys(policy).filter((k) => !META_KEYS.has(k) && !allowed.includes(k));
+  if (unknown.length) {
+    throw new UsageError(`${where} 有未知键：${unknown.join(', ')}（允许：${allowed.join(', ')}）——拼错的键会静默不生效，所以这里直接报错`);
+  }
+  if (policy.version !== undefined && Number(policy.version) !== POLICY_VERSION) {
+    throw new UsageError(`${where} 的 version=${policy.version}，当前只支持 ${POLICY_VERSION}（改格式请升级 stdkit）`);
+  }
+  return policy;
+}
+
 export function loadPolicy(root = ROOT, { profile, target } = {}) {
-  let policy = readJSON(path.join(root, 'policy', 'default.json'), {}) ?? {};
+  let policy = validatePolicyShape(readJSON(path.join(root, 'policy', 'default.json'), {}) ?? {}, { where: 'policy/default.json' });
   if (profile) {
     const prof = readJSON(path.join(root, 'policy', 'profiles', `${profile}.json`), null);
     if (!prof) {
       const names = listProfiles(root);
       throw new UsageError(`找不到 profile "${profile}"（可用：${names.join(', ') || '无'}）`);
     }
+    validatePolicyShape(prof, { where: `policy/profiles/${profile}.json`, allowed: PROFILE_KEYS });
     policy = { ...policy, ...prof };
   }
   if (target) {
     const override = readJSON(path.join(target, '.stdkit', 'policy.json'), null);
-    if (override) policy = { ...policy, ...override };
+    if (override) {
+      // 单仓覆盖不允许写 profile 的结构性字段（如 stack）：那是 profile 的事
+      validatePolicyShape(override, { where: `${target}/.stdkit/policy.json`, allowed: OVERRIDE_KEYS });
+      policy = { ...policy, ...override };
+    }
   }
   return policy;
 }

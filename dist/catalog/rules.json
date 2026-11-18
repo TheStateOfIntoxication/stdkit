@@ -1,6 +1,7 @@
 {
   "$comment": "生成物，勿手改。node cli/ds.mjs catalog",
-  "version": "0.19.2",
+  "schema": 1,
+  "version": "0.20.0",
   "domains": [
     "java-jdk8",
     "sql",

@@ -26,7 +26,7 @@ policy/*.json ──────────┘（阻断阈值 + 单条降级）
 `AGENTS.md`，外加 `cli/` 与 `catalog/` 的副本（所以 dist 自包含）。
 **不要手改 dist**，改了 `rules/` 重新 build 即可。
 
-**policy/** — 决定「什么级别算阻断」。三层覆盖：`policy/default.json` ←
+**policy/** — 决定「什么级别算阻断」。三层覆盖（**浅合并**，键有白名单，写错直接报错）：`policy/default.json` ←
 `--profile <name>` ← 业务仓 `.stdkit/policy.json`。还能按单条规则改生效级：
 `{"severity":{"J8-SPR-10":"medium"}}`。
 

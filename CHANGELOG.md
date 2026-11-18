@@ -5,6 +5,54 @@
 **版本策略**：`0.x` 期间结构可能变（`catalog` 字段、`policy` 键名、`--fail-on` 语义）；
 升 `1.0.0` 的触发条件是这三处冻结、且连续两个版本无 breaking。
 
+## [0.20.0] — 2026-11-18
+
+按 `docs/v1-freeze-review.md` 的建议，把「1.0 冻结前必须先做的 7 项」全部落地，并加上形状快照机制。
+决策记录见 [ADR 0004](docs/adr/0004-v1-freeze.md)。
+
+### Changed（清理死键）
+
+- **删 `policy.domains` / profile 的 `extends`**：两者都没有任何读取方（域来自规则本身，`--domain` 用 catalog
+  校验；`loadPolicy` 本来就把 default 摊开再摊 profile）。冻死键等于把它们写成「以后必须一直支持」的承诺。
+- **`policy.version` 变成活的**：`ds check` 断言 `=== 1`；`loadPolicy` 里不匹配直接报错（改格式要升级 stdkit）。
+- **`warnOn` 写清作用**：只用于生成 prompt 里「这一级算 Warning」那句话，不参与判定。
+- **`stack` 保留但注释写明「没有任何判定读它」**（ADR 0002 明确不做多栈，写成配置会让人以为能改判定）。
+
+### Added
+
+- **`catalog.schema: 1`**：数据格式版本与产品版本 `version` 分开——外部工具据此判断「我读的是不是我能读的格式」。
+- **policy 三层键白名单**（`POLICY_KEYS` / `PROFILE_KEYS` / `OVERRIDE_KEYS`）：
+  `policy/default.json`、`policy/profiles/<n>.json`、`<业务仓>/.stdkit/policy.json` 各有一份允许集，
+  未知键直接报错（配置写错 = 环境错误 → **exit 2**；`check` 在 CI 里提前拦）。单仓覆盖不允许写 `stack`。
+  实测：`.stdkit/policy.json` 写 `blockon` / `stack` / `version: 9` 全部 exit 2 并点名键名；写 `severity` 正常。
+- **`policy/compat.json` + `cli/lib/compat.test.mjs`（形状快照）**：只断言「键存在且类型不变」，不断言值。
+  - catalog 根键集合、`schema`、每条规则的必需键 + 已登记可选键（`maxHits`）；
+  - policy 三个白名单与快照一致、仓里每个 profile 只能用 profile 允许的键；
+  - 退出码语义实测（`check` → 0、`java-bad` → 1、`--severity hight` 与未知命令 → 2）；
+  - `compat.semantics` 三条（阈值语义 / 浅合并 / `applies` 相对业务仓根）必须真的写下来。
+  破坏性变更会让 `npm test` 红，报错里直接给三步升级流程：改大版本 / 改快照 / 写 ADR。
+- **ADR 0004**：冻结范围（只冻形状 + 三条语义）、为什么不冻内容、代价与复盘触发线。
+
+### 文档
+
+- `docs/commands.md` 策略段补白名单表、`version` / `warnOn` / `stack` 的真实作用、浅合并说明；
+- `docs/concepts.md` 一句标注「浅合并 + 键白名单」；
+- `docs/v1-freeze-review.md` 的 §4 七项标为已完成，结语改为「三处都能冻了」；
+- `docs/adr/README.md` 索引补 0004。
+
+### 测试
+
+- 59 → **60**：`compat.test.mjs` 5 条（catalog 形状 / 规则键 / policy 键与版本 / 退出码 / 语义快照）
+  + policy 白名单单测 1 条（拼错键 / 单仓写 stack / 非法 version 都报错）。
+
+### 验证
+
+- `check` 0/0、`eval` 23/23、`eval --semantic` 2/2、`test` 60/60、`doctor` 0 fail
+- 注入：`domains` 加回 default.json → check error；`policy.version: 2` → check error；
+  `.stdkit/policy.json` 拼错键 → scan exit 2；catalog 形状改动 → compat 测试红（含升级提示）
+
+影响: 版本 0.20.0；policy 删除 `domains` / `extends`（若业务仓写过，现在会报错并点名）；
+      catalog 新增 `schema`；policy 三层键白名单生效；新增 policy/compat.json 与 ADR 0004
 ## [0.19.2] — 2026-11-18
 
 ### Fixed（契约级）

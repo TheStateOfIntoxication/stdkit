@@ -7,7 +7,7 @@ import { globToRegExp } from './scan.mjs';
 import { isCatalogStale } from './catalog.mjs';
 import { isDistStale, buildFiles, collectPromptRuleIds, REVIEWS, SKILLS } from './build.mjs';
 import { CROSS_RULE_IDS } from './cross.mjs';
-import { validateOverrides, listProfiles } from './policy.mjs';
+import { validateOverrides, listProfiles, validatePolicyShape, POLICY_KEYS, PROFILE_KEYS } from './policy.mjs';
 import { listSemanticCases, validateSemanticCase } from './semantic.mjs';
 
 // 条文声明「什么情况例外」却没落成机制时的提醒。
@@ -558,6 +558,26 @@ export function runCheck(root = ROOT) {
           if (reason.length < 8) at(`reason 太短（"${reason}"）：不接受「历史原因」「一直在」这类没有信息量的理由`);
         }
       }
+    }
+  }
+
+  // policy 文件的形状：未知键 / 非法 version 必须报错
+  // （CLI 在 loadPolicy 里也会抛，但 check 要在 CI 里提前拦住，不必等到有人跑 scan）
+  for (const [relPath, allowed] of [
+    [path.join('policy', 'default.json'), POLICY_KEYS],
+    ...listProfiles(root).map((n) => [path.join('policy', 'profiles', `${n}.json`), PROFILE_KEYS]),
+  ]) {
+    const abs = path.join(root, relPath);
+    if (!fs.existsSync(abs)) continue;
+    const raw = readJSON(abs, null);
+    if (!raw) {
+      err(relPath.split(path.sep).join('/'), 0, 'JSON 解析失败');
+      continue;
+    }
+    try {
+      validatePolicyShape(raw, { where: relPath.split(path.sep).join('/'), allowed });
+    } catch (e) {
+      err(relPath.split(path.sep).join('/'), 0, e.message);
     }
   }
 

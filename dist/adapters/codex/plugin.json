@@ -1,6 +1,6 @@
 {
   "name": "stdkit",
-  "version": "0.19.2",
+  "version": "0.20.0",
   "description": "stdkit 工程规范（127 条）：skills 目录 + 只显式调用的审查 skill。",
   "license": "MIT",
   "skills": "./skills/"
