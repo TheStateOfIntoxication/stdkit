@@ -1,6 +1,6 @@
 {
   "name": "stdkit",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "JDK 8 / Vue 2 / SQL 工程规范与审查工具包：规则一次编写，Agent 产物全生成，能机器判定的一律机器判。",
   "type": "module",
   "bin": {
@@ -17,7 +17,8 @@
     "catalog": "node cli/ds.mjs catalog",
     "doctor": "node cli/ds.mjs doctor",
     "rules": "node cli/ds.mjs rules",
-    "test:raw": "node --test cli/lib/*.test.mjs"
+    "test:raw": "node --test cli/lib/*.test.mjs",
+    "eval:semantic": "node cli/ds.mjs eval --semantic"
   },
   "keywords": [
     "pi-package",

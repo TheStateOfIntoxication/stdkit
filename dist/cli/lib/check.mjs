@@ -8,6 +8,7 @@ import { isCatalogStale } from './catalog.mjs';
 import { isDistStale, buildFiles, collectPromptRuleIds, REVIEWS, SKILLS } from './build.mjs';
 import { CROSS_RULE_IDS } from './cross.mjs';
 import { validateOverrides, listProfiles } from './policy.mjs';
+import { listSemanticCases, validateSemanticCase } from './semantic.mjs';
 
 // 条文声明「什么情况例外」却没落成机制时的提醒。
 // `内部` / `不报` 太常见（Service 内部、边界陈述），不纳入，否则这条校验会被噪声淹掉。
@@ -552,6 +553,13 @@ export function runCheck(root = ROOT) {
   // 只 warning 不阻断——lockfile 之类合法新增不该被拦。
   for (const stray of rootStrayFiles(root)) {
     warn(stray, 0, '仓根出现白名单外的文件/目录；临时脚本放 .tmp/（已忽略）或仓外，确认要留的加进 check 的白名单');
+  }
+
+  // 语义层用例：结构要在，且 mustReport 必须是「没有 deny 的规则」——有 deny 就该进 evals/cases
+  for (const name of listSemanticCases(root)) {
+    const { errors: sErr, warnings: sWarn } = validateSemanticCase(root, name);
+    for (const m of sErr) err(`evals/semantic/${name}`, 0, m);
+    for (const m of sWarn) warn(`evals/semantic/${name}`, 0, m);
   }
 
   // catalog 与规则必须同步

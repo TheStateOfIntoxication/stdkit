@@ -73,6 +73,30 @@ node cli/ds.mjs eval
 
 `expect.json` 支持的可选断言：`blocked`（阻断结论）、逐条 `severity`（生效级）、`waived`（豁免）。
 
+### 语义层：`--semantic`（不调模型）
+
+```bash
+node cli/ds.mjs eval --semantic                       # 跑 evals/semantic/<case>
+node cli/ds.mjs eval --record pay-retry --reported J8-SPR-12 --by 你的名字
+```
+
+`evals/semantic/<case>/` 结构：
+
+| 路径 | 作用 |
+|---|---|
+| `fixture/` | 待审代码片段（小、真、能说明问题） |
+| `expect.json` | `{ mustReport: [...], mustNotReport: [...], why: "为什么这段必须命中" }` |
+| `result.json` | 一次人工/agent 审查的记录（`reported` + `recordedAt` + `recordedBy`），由 `--record` 写 |
+
+**它不调模型**（ADR 0003：CI 不依赖模型与网络）。它做两件事：
+
+1. 校验用例本身——`mustReport` 必须是**没有 `deny` 的规则**（有 `deny` 就该放进 `evals/cases`），
+   fixture 不能为空，`why` 建议写（warning）；
+2. 比对「上一次审查的记录」与期望：漏审 / 误报都算失败。
+
+没记录的用例显示「未记录」并给出 `--record` 模板，**不算失败**；一旦记录过，改条文或 prompt 后
+重跑发现判定变了，就是回归信号。`--by` 会写进 `result.json`——别人复核时要知道是谁审的。
+
 ## build / catalog
 
 ```bash

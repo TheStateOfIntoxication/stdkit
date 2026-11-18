@@ -16,6 +16,7 @@ import { runPublishCheck, runHistoryCheck } from './publish.mjs';
 import { planInstall, applyInstall } from './install.mjs';
 import { runCrossCheck } from './cross.mjs';
 import { runEvals } from './eval.mjs';
+import { listSemanticCases, validateSemanticCase, recordSemantic, runSemanticEvals } from './semantic.mjs';
 
 const read = (p) => fs.readFileSync(p, 'utf8').replace(/^\uFEFF/, '');
 const tmpdir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'stdkit-'));
@@ -759,4 +760,63 @@ test('scanText：maxHits 在护栏路径上同语义（同一份实现）', () =
   const over = scanText({ relPath: 'a.vue', text: text + '\nrequest.get(3)', catalog });
   assert.equal(over.length, 1);
   assert.equal(over[0].line, 3);
+});
+
+// 语义层回归：不调模型，只校验用例 + 比对上次审查的记录（ADR 0003）
+test('semantic：结构校验拦「把可机判规则塞进语义用例」，记录后能比对漏审/误报', () => {
+  const root = tmpdir();
+  const caseDir = path.join(root, 'evals', 'semantic', 'demo');
+  fs.mkdirSync(path.join(caseDir, 'fixture'), { recursive: true });
+  fs.writeFileSync(path.join(caseDir, 'fixture', 'A.java'), 'class A {}');
+
+  const cat = {
+    rules: [
+      { id: 'X-SEM-01', deny: [], status: 'active' },
+      { id: 'X-SEM-02', deny: [], status: 'active' },
+      { id: 'X-MAC-01', deny: ['x'], status: 'active' },
+    ],
+  };
+
+  // ① 有 deny 的规则不该出现在语义用例里
+  fs.writeFileSync(path.join(caseDir, 'expect.json'), JSON.stringify({ mustReport: ['X-MAC-01'], why: 'w' }));
+  let v = validateSemanticCase(root, 'demo', cat);
+  assert.ok(v.errors.some((e) => /可机判规则/.test(e)), '应拦下可机判规则：' + v.errors);
+
+  // ② mustReport 为空也算结构错误
+  fs.writeFileSync(path.join(caseDir, 'expect.json'), JSON.stringify({ mustReport: [] }));
+  assert.ok(validateSemanticCase(root, 'demo', cat).errors.some((e) => /mustReport/.test(e)));
+
+  // ③ 合法用例：未记录时 skipped（不算失败）；mustNotReport 也只能是语义规则
+  fs.writeFileSync(path.join(caseDir, 'expect.json'), JSON.stringify({ mustReport: ['X-SEM-01'], mustNotReport: ['X-SEM-02'], why: 'w' }));
+  assert.deepEqual(validateSemanticCase(root, 'demo', cat).errors, []);
+  let r = runSemanticEvals(root, cat);
+  assert.equal(r[0].skipped, true, '未记录应标 skipped');
+  assert.equal(r[0].pass, true, '未记录不算失败');
+
+  // ④ 记录正确 → 通过；记录漏审 → 失败
+  recordSemantic(root, 'demo', ['X-SEM-01'], 'unit-test');
+  assert.equal(runSemanticEvals(root, cat)[0].pass, true);
+  recordSemantic(root, 'demo', [], 'unit-test');
+  const bad = runSemanticEvals(root, cat)[0];
+  assert.equal(bad.pass, false);
+  assert.ok(bad.problems.some((p) => /漏审 X-SEM-01/.test(p)), bad.problems.join(','));
+
+  // ⑤ 误报 mustNotReport 也算失败
+  recordSemantic(root, 'demo', ['X-SEM-01', 'X-SEM-02'], 'unit-test');
+  assert.ok(runSemanticEvals(root, cat)[0].problems.some((p) => /误报 X-SEM-02/.test(p)));
+
+  // ⑥ 用例列表按名字排序；record 一个不存在的用例要抛错
+  assert.deepEqual(listSemanticCases(root), ['demo']);
+  assert.throws(() => recordSemantic(root, 'nope', ['X-SEM-01']), /没有这个语义用例/);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('semantic：本仓的两个种子用例结构合法且已记录', () => {
+  const cases = listSemanticCases(ROOT);
+  assert.ok(cases.length >= 2, `至少两个用例，实际 ${cases.length}`);
+  for (const name of cases) {
+    assert.deepEqual(validateSemanticCase(ROOT, name).errors, [], `${name} 结构应合法`);
+  }
+  const results = runSemanticEvals(ROOT);
+  assert.ok(results.every((r) => r.pass), results.filter((r) => !r.pass).map((r) => r.name).join(','));
 });

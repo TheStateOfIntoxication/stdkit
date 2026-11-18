@@ -1,6 +1,6 @@
 # stdkit dist（生成物，勿手改）
 
-由 `ds build` 从 `rules/` + `policy/` 生成。版本 v0.18.0，127 条规则。
+由 `ds build` 从 `rules/` + `policy/` 生成。版本 v0.19.0，127 条规则。
 
 改条文请改仓库根 `rules/`，然后 `node cli/ds.mjs build && node cli/ds.mjs check`。
 

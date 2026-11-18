@@ -1,0 +1,7 @@
+{
+  "mustReport": [
+    "J8-SPR-03"
+  ],
+  "mustNotReport": [],
+  "why": "@Transactional 方法里调了远程服务（stock-service），远程成功而本地回滚时库存已被占用；必须报 J8-SPR-03（事务内禁止远程调用与发消息）。"
+}

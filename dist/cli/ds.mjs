@@ -8,6 +8,7 @@ import { runScan } from './lib/scan.mjs';
 import { buildBrief, renderBriefMarkdown, loadBaseline, snapshotBaseline, BASELINE_REL } from './lib/brief.mjs';
 import { writeDist } from './lib/build.mjs';
 import { runEvals } from './lib/eval.mjs';
+import { runSemanticEvals, recordSemantic, SEMANTIC_NOTE } from './lib/semantic.mjs';
 import { initRepo, doctor } from './lib/init.mjs';
 import { runPublishCheck, runHistoryCheck, loadPublishPolicy } from './lib/publish.mjs';
 import { planInstall, applyInstall, uninstall, installPi } from './lib/install.mjs';
@@ -19,7 +20,7 @@ import { ROOT, c, writeJSON } from './lib/util.mjs';
 const HELP = `stdkit · ds
 
   ds check [路径]              自检规则仓（CI 用，error 即非 0；dist 安装会明确跳过）
-  ds eval                      确定性层回归：跑 evals/cases 并比对期望行号
+  ds eval [--semantic]         确定性层回归（行级+仓级）；--semantic 跑语义层用例（不调模型）
   ds build                     rules/ → dist/（skills · prompts · extensions · adapters）
   ds brief [路径] [筛选]        生成审查简报（A 类命中 + B 类规则），喂给模型
   ds scan [路径] [筛选]         确定性检查：对业务仓跑 deny 正则
@@ -64,6 +65,12 @@ scan / brief：
   --severity <s>    只看该级的命中（critical | high | medium | low）
   --no-mask         命中片段不掩码（默认掩码：命中行往往就是密钥本身）
 
+eval 额外：
+  --semantic        跑 evals/semantic/<case>：只校验用例结构 + 比对上次人工/agent 审查的记录
+  --record <case>   把一次审查结果写进 <case>/result.json（配合 --reported / --by）
+  --reported <IDs>  本次审查报了哪些规则（逗号分隔）
+  --by <who>        记录者（写进 result.json，别人复核时要知道是谁审的）
+
 brief 额外：
   --fail            有阻断项时退出 1（默认始终 0，避免模型误判为命令失败）
 
@@ -81,9 +88,9 @@ brief 额外：
 
 const BOOL_FLAGS = new Set([
   '--json', '--dry-run', '--force', '--fail', '--scaffold',
-  '--pi', '--claude', '--codex', '--cursor', '--copilot', '--all', '--uninstall', '--no-mask', '--version', '--history',
+  '--pi', '--claude', '--codex', '--cursor', '--copilot', '--all', '--uninstall', '--no-mask', '--version', '--history', '--semantic',
 ]);
-const VALUE_FLAGS = new Set(['--tag', '--domain', '--level', '--severity', '--fail-on', '--limit', '--days', '--profile', '--path', '--project']);
+const VALUE_FLAGS = new Set(['--tag', '--domain', '--level', '--severity', '--fail-on', '--limit', '--days', '--profile', '--path', '--project', '--record', '--reported', '--by']);
 
 const argv = process.argv.slice(2);
 const cmd = argv[0] ?? 'check';
@@ -104,7 +111,7 @@ async function main() {
       return process.exit(printCheck(runCheck(path.resolve(f.positional[0] ?? ROOT))));
     }
     case 'eval':
-      return runEval();
+      return runEval(argv.slice(1));
     case 'build': {
       const n = writeDist(ROOT);
       console.log(c.green('dist/ 已重建') + c.dim(`  ${n} 个文件`));
@@ -434,7 +441,49 @@ function doDoctor(args) {
   return process.exit(r.failed ? 1 : 0);
 }
 
-function runEval() {
+function runEval(args = []) {
+  const f = flags(args);
+
+  // 语义层：不调模型（ADR 0003），只校验用例结构 + 比对「上一次人工/agent 审查的记录」
+  if (f.record) {
+    const reported = String(f.reported ?? '').split(',').map((x) => x.trim()).filter(Boolean);
+    if (!reported.length) {
+      console.error(c.red('--record 需要 --reported <ID,ID,...>（本次审查报了哪些规则）'));
+      return process.exit(2);
+    }
+    const result = recordSemantic(ROOT, String(f.record), reported, f.by ?? 'unknown');
+    console.log(c.green('已记录') + c.dim(`  ${f.record}  reported=${result.reported.join(',')}  ${result.recordedAt} by ${result.recordedBy}`));
+    return process.exit(0);
+  }
+
+  if (f.semantic) {
+    const results = runSemanticEvals(ROOT);
+    console.log(c.bold('stdkit eval（语义层）') + c.dim(`  ${results.length} 个用例`));
+    if (!results.length) {
+      console.log(c.yellow('还没有语义用例：evals/semantic/<case>/{fixture,expect.json}'));
+      return process.exit(0);
+    }
+    let failed = 0;
+    let skipped = 0;
+    for (const x of results) {
+      if (!x.pass) {
+        failed++;
+        console.log(c.red('✗') + ` ${x.name}`);
+        for (const p of x.problems) console.log(`    ${p}`);
+      } else if (x.skipped) {
+        skipped++;
+        console.log(c.yellow('·') + ` ${x.name}` + c.dim('  未记录'));
+        for (const p of x.problems) console.log(c.dim(`    ${p}`));
+      } else {
+        console.log(c.green('✓') + ` ${x.name}` + c.dim(`  ${x.recordedAt} by ${x.recordedBy}`));
+      }
+    }
+    const tail = `${results.length - failed - skipped} passed, ${failed} failed, ${skipped} 未记录`;
+    console.log(failed ? c.red(tail) : skipped ? c.yellow(tail) : c.green(tail));
+    console.log(c.dim(SEMANTIC_NOTE));
+    return process.exit(failed ? 1 : 0);
+  }
+
   const r = runEvals(ROOT);
   console.log(c.bold('stdkit eval') + c.dim(`  ${r.results.length} 个用例`));
   for (const x of r.results) {

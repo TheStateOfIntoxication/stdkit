@@ -1,0 +1,9 @@
+{
+  "$comment": "一次人工/agent 审查的记录。ds eval --semantic 用它做回归：改 prompt 或条文后重跑一遍再 --record。",
+  "recordedAt": "2026-11-18",
+  "recordedBy": "agent(pi)",
+  "reported": [
+    "J8-SPR-03"
+  ],
+  "method": "review by agent/human against rules/*.md; 只记录落在该域的规则 ID"
+}
