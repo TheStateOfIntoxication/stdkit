@@ -16,10 +16,22 @@ const cat = buildCatalog(ROOT);
 test('relPathOf：相对/绝对/Windows 分隔符都归一成 posix 相对路径', () => {
   const cwd = path.resolve('/tmp/repo');
   assert.equal(relPathOf(cwd, 'src/A.java'), 'src/A.java');
+  // 反斜杠必须在**任何平台**上都归一（判据不能依赖 path.sep：Linux 上它不把 \ 当分隔符，
+  // 于是 src\\main\\A.java 会被当成一个文件名原样返回 —— CI 的 Ubuntu 就是这么红的）
   assert.equal(relPathOf(cwd, 'src\\main\\A.java'), 'src/main/A.java');
-  assert.equal(relPathOf(cwd, path.join(cwd, 'src', 'A.java')).split(path.sep).join('/'), 'src/A.java');
+  assert.equal(relPathOf(cwd, 'src\\main/A.java'), 'src/main/A.java');
+  // 断言函数自己就返回 posix，不在测试里替它做 split(path.sep).join() —— 那会掩盖上面那个 bug
+  assert.equal(relPathOf(cwd, path.join(cwd, 'src', 'A.java')), 'src/A.java');
   // 仓外路径不会因为前缀相同被误切
   assert.equal(relPathOf(cwd, path.join(cwd, '..other', 'A.java')).startsWith('..other'), true);
+});
+
+test('isSkippedPath：反斜杠路径在任何平台上都按同一套规则跳过', () => {
+  // 不真的建目录：node_modules 是「任意层级都跳」，判定不依赖文件是否存在
+  const cwd = path.resolve(os.tmpdir(), 'stdkit-skip');
+  assert.equal(isSkippedPath(cwd, 'node_modules/a.js'), true);
+  assert.equal(isSkippedPath(cwd, 'src\\node_modules\\a.js'), true, '反斜杠版也要跳过');
+  assert.equal(isSkippedPath(cwd, 'src/app.js'), false);
 });
 
 test('pickGuardTarget：只认 write / edit，edit 拼接各段 newText', () => {

@@ -10,9 +10,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { skipByPath } from './scan.mjs';
 
-/** 把 tool 参数里的路径归一成相对 cwd 的 posix 路径。 */
+/** 把 tool 参数里的路径归一成相对 cwd 的 posix 路径。
+ *
+ * 先把两种分隔符都换成 `/` 再交给 path：Linux / macOS 上 `path.resolve` 不把 `\` 当分隔符，
+ * 于是 `src\main\A.java` 会被当成「一个名字里带反斜杠的文件」，相对路径原样返回、归一化失效
+ * （CI 的 Ubuntu 上就是这么红的：期望 `src/main/A.java`，实际 `src\\main\\A.java`）。
+ */
 export function relPathOf(cwd, p) {
-  const abs = /^([A-Za-z]:|[\\/])/.test(p) ? p : path.join(cwd, p);
+  const norm = String(p).replace(/\\/g, '/');
+  const abs = /^([A-Za-z]:|\/)/.test(norm) ? norm : path.join(cwd, norm);
   const rel = path.relative(path.resolve(cwd), path.resolve(abs));
   return rel.split(path.sep).join('/');
 }
@@ -24,7 +30,8 @@ export function relPathOf(cwd, p) {
  */
 export function isSkippedPath(cwd, rel) {
   const base = path.resolve(cwd);
-  return skipByPath(path.resolve(base, rel), base);
+  // 同 relPathOf：先统一分隔符，否则 Linux 上 `src\dist\a.js` 会被当成单个文件名，跳过判定失效
+  return skipByPath(path.resolve(base, String(rel).replace(/\\/g, '/')), base);
 }
 
 /**
