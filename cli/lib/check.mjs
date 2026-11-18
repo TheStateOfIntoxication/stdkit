@@ -521,6 +521,46 @@ export function runCheck(root = ROOT) {
   if (!fs.existsSync(provPath)) err('docs/provenance.md', 0, '缺少规则来源声明');
   else if (!/阿里巴巴/.test(readText(provPath))) warn('docs/provenance.md', 0, '未提到手册来源（p3c 对账方式）');
 
+  // publish.json 的 historyAllow：逐条枚举的豁免必须真的生效，否则就是「写了但不起作用」
+  {
+    const pubPath = path.join(root, 'policy', 'publish.json');
+    const repoFiles = walk(root, () => true).map((f) => rel(f));
+    if (fs.existsSync(pubPath)) {
+      const pub = readJSON(pubPath, null);
+      if (!pub) err('policy/publish.json', 0, 'JSON 解析失败');
+      else {
+        const ids = new Set((pub.forbidden ?? []).map((f) => f.id));
+        for (const [i, x] of (pub.historyAllow ?? []).entries()) {
+          const at = (m) => err('policy/publish.json', 0, `historyAllow[${i}]：${m}`);
+          if (!x || typeof x !== 'object') {
+            at('必须是对象 { id, path, reason }');
+            continue;
+          }
+          if (!ids.has(x.id)) at(`id "${x.id}" 不在 forbidden 里（写错就是静默不生效）`);
+          if (!x.path) at('缺少 path（glob，如 "CHANGELOG.md" / "docs/**"）');
+          else if (x.path === '**' || x.path === '**/*') at(`path "${x.path}" 是全域放行——要么逐条列，要么把 pattern 删掉`);
+          else if (/^\//.test(x.path) || x.path.includes('..') || x.path.includes('\\')) {
+            at(`path 必须是仓内相对路径（不能以 / 开头、不能含 .. 或反斜杠）：${x.path}`);
+          } else {
+            // 拼错的 glob 照样能编译（[ 会被转义），所以真正能拦住 typo 的判据是：
+            // 「这个 glob 在仓里至少配到一个真实文件」——否则它就是永远不会命中的空气条目
+            let re;
+            try {
+              re = globToRegExp(x.path);
+            } catch (e) {
+              at(`path glob 不可用：${x.path}（${e.message}）`);
+            }
+            if (re && !repoFiles.some((f) => re.test(f))) {
+              at(`path "${x.path}" 在仓里一个文件都配不到（拼错或已过期），它永远不会生效`);
+            }
+          }
+          const reason = typeof x.reason === 'string' ? x.reason.trim() : '';
+          if (reason.length < 8) at(`reason 太短（"${reason}"）：不接受「历史原因」「一直在」这类没有信息量的理由`);
+        }
+      }
+    }
+  }
+
   // policy 单条覆盖：ID 必须存在且 active，取值必须合法
   const policyFiles = ['default.json', ...listProfiles(root).map((n) => `profiles/${n}.json`)];
   for (const rel of policyFiles) {

@@ -22,6 +22,10 @@ jobs:
         run: node cli/ds.mjs check
       - name: 确定性层回归（行级 + 仓级）
         run: node cli/ds.mjs eval
+      # 语义层只是比对「上一次审查的记录」，不调模型/网络：把记录内部自相矛盾（记录还在、规则已删）暴露出来
+      - name: 语义层记录比对（不调模型）
+        run: node cli/ds.mjs eval --semantic
+
       - name: 单测（含护栏、剥离器矩阵、install/publish/cross）
         # 不用 shell 展开 glob：Windows 的 pwsh 不会展开，两个平台行为会不一致
         run: node scripts/run-tests.mjs

@@ -737,22 +737,31 @@ export function runScan({ target, catalog, domain, severity, diffRef, baseline, 
     const strippedLines = stripLines(file, lines);
     const limit = diff ? diff.get(file) : null;
 
-    // 先收到本文件的局部数组：maxHits 是「同一文件内」的判据，不能拿全局 hits 比
-    const fileFindings = [];
+    // 顺序很关键：**先全量收命中 → 再 cap → 最后按 diff 过滤**。
+    // maxHits 的判据是「这个文件里有多少处命中」，而 --diff 只告诉我们「哪几行改了」。
+    // 先按 diff 过滤会把计数打残：文件里已有 4 处、本次新增第 5 处时，cap 只看到 1 处 → 不报。
+    // 而 --diff 正是 gate.sh 与 ds brief --diff 的主路径（N45）。
+    const fileFindings = [];   // 全文件命中（用于计数）
+    const fileWaived = [];     // 全文件豁免（同样按 diff 过滤后上报）
     lines.forEach((src, idx) => {
       const lineNo = idx + 1;
-      if (limit && !limit.has(lineNo)) return;
       const stripped = strippedLines[idx];
       for (const { found, waiver } of matchLine(hit, relPath, src, lineNo, waivers, stripped, { mask })) {
         const expired = waiver ? isExpired(waiver.until) : false;
         if (waiver) {
           if (expired) expiredWaivers.add(`${waiver.ruleId}@${waiver.file ?? '*'}`);
-          else waived.push({ ...found, waiver: waiver.reason ?? '' });
+          else fileWaived.push({ ...found, waiver: waiver.reason ?? '' });
         }
         if (!waiver || expired) fileFindings.push(found);
       }
     });
-    findings.push(...capByMaxHits(fileFindings, hit));
+
+    // diff 语义（选项 A）：**越线那一行落在本次改动内才报** —— 只报新增问题。
+    // 所以「文件里已有 4 处、这次新增第 5 处」会报（第 5 处在改动里）；
+    // 「5 处都在历史里、这次只改了注释」不报（越线那行没动过）。
+    const keep = (f) => !limit || limit.has(f.line);
+    findings.push(...capByMaxHits(fileFindings, hit).filter(keep));
+    waived.push(...fileWaived.filter(keep));
   }
 
   const order = { critical: 0, high: 1, medium: 2, low: 3 };

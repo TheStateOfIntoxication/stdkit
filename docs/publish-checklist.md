@@ -3,6 +3,14 @@
 发布（push 到公开仓 / `npm publish` / 发 tag）前逐条勾。机器能做的只有第 2 条，
 **其余都得人过一遍**——这也是这份清单存在的理由。
 
+## 0. 先看 CI（顺序很重要）
+
+本地全绿不等于能发：本机是 Windows / 可能没有 git，恰好绕过 CI 能抓到的两类问题
+（Linux 路径语义、无 git 时的 fail-closed 行为）。**CI 红着的时候本地全绿只会给人虚假信心。**
+
+- [ ] 最近一次 `main` 的 CI **四个 job 全绿**（`check` × node 18/20/22 + `windows`；tag 时还有 `publish-check`）
+- [ ] 红过的话，确认那次红的原因已修且新一次是绿的（别只看「最后一条是绿的」）
+
 ## 1. 授权
 
 - [ ] `LICENSE` 存在，`package.json` 的 `license` 与之一致（`ds check` 会校验）

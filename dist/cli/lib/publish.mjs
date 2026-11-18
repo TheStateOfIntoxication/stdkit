@@ -44,7 +44,8 @@ function listPublishFiles(base) {
     // .idea/、本地草稿都算进来），也会悄悄变小（漏掉 git 才能识别的忽略规则）。宁可报错。
     if (fs.existsSync(path.join(base, '.git'))) {
       throw new Error(
-        `publish-check 需要 git 才能取到「真正会发布」的文件列表，但调用失败（${GIT}）：${gitErr(e)}\n` +
+        `publish-check 需要 git：工作树模式要它取「真正会发布」的文件列表，--history 还要它取可达历史；` +
+        `但调用失败（${GIT}）：${gitErr(e)}\n` +
           '  · git 不在 PATH 时设 DS_GIT 指向可执行文件（例如 DS_GIT=/usr/bin/git）\n' +
           '  · 或者在一个非 git 的目录上跑（那种情况下退回目录遍历）',
       );

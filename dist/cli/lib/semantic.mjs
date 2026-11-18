@@ -61,10 +61,14 @@ export function validateSemanticCase(root, name, cat = buildCatalog(root)) {
 }
 
 /** 记录一次审查结果（谁跑的、什么时候）。工具不判对错，只存下来供下次比。 */
-export function recordSemantic(root, name, reported, by = 'unknown') {
+export function recordSemantic(root, name, reported, by = 'unknown', cat = buildCatalog(root)) {
   const dir = path.join(CASE_DIR(root), name);
   if (!fs.existsSync(dir)) throw new Error(`没有这个语义用例：${name}（可选：${listSemanticCases(root).join(' / ') || '无'}）`);
   const ids = [...new Set(reported.map((s) => s.trim()).filter(Boolean))].sort();
+  // 记了不存在的 ID 只会在比对时表现为「漏审」，提示太绕：这里直接拦住
+  const known = new Set((cat.rules ?? []).map((r) => r.id));
+  const unknown = ids.filter((id) => !known.has(id));
+  if (unknown.length) throw new Error(`reported 里有不存在的规则 ID：${unknown.join(', ')}（对照 ds rules 或 catalog/rules.json）`);
   const result = {
     $comment: '一次人工/agent 审查的记录。ds eval --semantic 用它做回归：改 prompt 或条文后重跑一遍再 --record。',
     recordedAt: new Date().toISOString().slice(0, 10),

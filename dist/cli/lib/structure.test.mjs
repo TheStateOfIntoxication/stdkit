@@ -794,20 +794,23 @@ test('semantic：结构校验拦「把可机判规则塞进语义用例」，记
   assert.equal(r[0].pass, true, '未记录不算失败');
 
   // ④ 记录正确 → 通过；记录漏审 → 失败
-  recordSemantic(root, 'demo', ['X-SEM-01'], 'unit-test');
+  recordSemantic(root, 'demo', ['X-SEM-01'], 'unit-test', cat);
   assert.equal(runSemanticEvals(root, cat)[0].pass, true);
-  recordSemantic(root, 'demo', [], 'unit-test');
+  recordSemantic(root, 'demo', [], 'unit-test', cat);
   const bad = runSemanticEvals(root, cat)[0];
   assert.equal(bad.pass, false);
   assert.ok(bad.problems.some((p) => /漏审 X-SEM-01/.test(p)), bad.problems.join(','));
 
   // ⑤ 误报 mustNotReport 也算失败
-  recordSemantic(root, 'demo', ['X-SEM-01', 'X-SEM-02'], 'unit-test');
+  recordSemantic(root, 'demo', ['X-SEM-01', 'X-SEM-02'], 'unit-test', cat);
   assert.ok(runSemanticEvals(root, cat)[0].problems.some((p) => /误报 X-SEM-02/.test(p)));
+
+  // ⑥ 记录里塞不存在的 ID：直接报错（不然只会表现为「漏审」，提示太绕）
+  assert.throws(() => recordSemantic(root, 'demo', ['X-NOT-EXIST'], 'unit-test', cat), /不存在的规则 ID/);
 
   // ⑥ 用例列表按名字排序；record 一个不存在的用例要抛错
   assert.deepEqual(listSemanticCases(root), ['demo']);
-  assert.throws(() => recordSemantic(root, 'nope', ['X-SEM-01']), /没有这个语义用例/);
+  assert.throws(() => recordSemantic(root, 'nope', ['X-SEM-01'], 't', cat), /没有这个语义用例/);
   fs.rmSync(root, { recursive: true, force: true });
 });
 
@@ -819,4 +822,46 @@ test('semantic：本仓的两个种子用例结构合法且已记录', () => {
   }
   const results = runSemanticEvals(ROOT);
   assert.ok(results.every((r) => r.pass), results.filter((r) => !r.pass).map((r) => r.name).join(','));
+});
+
+// N45 的回归：maxHits 的计数必须在 diff 过滤**之前**做，否则「文件里已有 4 处、本次新增第 5 处」不报
+test('runScan --diff + maxHits：越线行在改动内才报（--diff 主路径）', () => {
+  const gitAvailable = (() => {
+    try {
+      execFileSync(GIT, ['--version'], { stdio: 'ignore' });
+      return true;
+    } catch {
+      return false;
+    }
+  })();
+  if (!gitAvailable) return; // 无 git 的机器跳过（CI 必跑）
+
+  const root = tmpdir();
+  const file = path.join(root, 'src', 'views', 'pay', 'index.vue');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const line = (i) => `    m${i}() { return request.get('/a${i}'); },`;
+  const head = (n) =>
+    ['<script>', 'export default {', '  methods: {', ...Array.from({ length: n }, (_, i) => line(i + 1)), '  },', '};', '</script>'].join('\n');
+
+  const env = { ...process.env, GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@t', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@t' };
+  const g = (...a) => execFileSync(GIT, ['-C', root, ...a], { stdio: 'ignore', env });
+  g('init', '-q');
+
+  // ① HEAD 里 4 处（未超限），工作区第 5 处 → 越线行在改动里 → 应报第 8 行
+  fs.writeFileSync(file, head(4));
+  g('add', '-A');
+  g('commit', '-qm', 'base');
+  fs.writeFileSync(file, head(5));
+  const r1 = runScan({ target: root, catalog: buildCatalog(ROOT), diffRef: 'HEAD' });
+  const hit1 = r1.findings.filter((f) => f.ruleId === 'V2-API-05');
+  assert.equal(hit1.length, 1, '文件累计 5 处应报 1 条，实际：' + JSON.stringify(r1.findings.map((f) => `${f.ruleId}@${f.line}`)));
+  assert.equal(hit1[0].line, 8, '应报第 5 处所在的第 8 行');
+
+  // ② 把 5 处提交进 HEAD，只改注释 → 越线行不在改动内 → 不报（选项 A：只报新增问题）
+  g('add', '-A');
+  g('commit', '-qm', 'five');
+  fs.writeFileSync(file, head(5).replace('<script>', '<script>\n// 只改注释'));
+  const r2 = runScan({ target: root, catalog: buildCatalog(ROOT), diffRef: 'HEAD' });
+  assert.deepEqual(r2.findings.filter((f) => f.ruleId === 'V2-API-05'), [], '只改注释不该报越线');
+  fs.rmSync(root, { recursive: true, force: true });
 });

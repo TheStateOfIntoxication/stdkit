@@ -22,8 +22,10 @@ const files = fs
   .map((f) => path.join('cli', 'lib', f));
 
 if (!files.length) {
-  console.error(`没找到单测文件：${DIR}`);
-  process.exit(1);
+  // 安装包里没有单测（package.json 的 files 排除了 *.test.mjs）。
+  // 这不是错误：单测属于源码仓，装完之后跑 npm test 本来就没有意义。
+  console.log(`此包不含单测（${DIR} 下没有 *.test.mjs）。单测在源码仓：git clone 后 npm test。`);
+  process.exit(0);
 }
 
 // 红的时候第一眼看这些：Node 版本、OS、临时目录、git 有没有
