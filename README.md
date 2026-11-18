@@ -59,6 +59,8 @@ critical 1 · high 1   共 2
 
 | 文档 | 内容 |
 |---|---|
+| [docs/design.md](docs/design.md) | **设计文档**：从零讲清它解决什么问题、四层判定、生成链、关键取舍（适合第一次了解这个项目） |
+| [docs/development.md](docs/development.md) | **开发文档**：环境坑、仓库地图、写规则/加域/加命令的完整演练、调试手册、常见坑 |
 | [docs/install.md](docs/install.md) | 五端安装（pi / Claude Code / Codex / Cursor / Copilot）、卸载、排查 |
 | [docs/commands.md](docs/commands.md) | 14 个命令与全部参数、退出码、策略与豁免 |
 | [docs/concepts.md](docs/concepts.md) | 概念一页纸：rules / policy / catalog / dist / baseline 怎么串起来 |
