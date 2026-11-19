@@ -303,6 +303,15 @@ export function runCheck(root = ROOT) {
           err('policy/jdk8-api.json', 0, `条目 "${e.id}" 已在清单里，但 J8-MOD-01 的 deny 没有它（业务代码不会被拦）`);
         }
       }
+      // since 是「多版本扩展」的地基（docs/adr/0005）：缺一条，将来按版本判定就会漏掉一个构造。
+      // 现在 J8 下不用它，但数据必须完整——否则等到要扩版本时才发现清单不可用。
+      for (const e of J8_ENTRIES) {
+        const since = Number(e.since);
+        if (!Number.isInteger(since) || since < 9 || since > 30) {
+          err('policy/jdk8-api.json', 0, `条目 "${e.id}" 的 since 必须是 9..30 的整数（该构造从哪个 JDK 版本开始可用），实际 "${e.since}"`);
+        }
+      }
+
       const inJson = new Set(J8_ENTRIES.filter((x) => x.rule).map((x) => x.pattern));
       for (const src of mod.meta?.deny ?? []) {
         if (!inJson.has(src)) err('rules/java-jdk8/00-language.md', 0, `J8-MOD-01 的 deny "${src}" 不在 policy/jdk8-api.json 里（清单会漂）`);

@@ -129,6 +129,11 @@ double total = 10.00 + 0.20;
 | `hint` | 报错文案：说清「这是 Java 几」+「J8 用什么替代」 |
 | `guard` | 参与规则示例守卫（默认 true） |
 | `rule` | 进 `J8-MOD-01` 的业务代码 `deny`（默认 true） |
+| `since` | 该构造从哪个 JDK 版本开始可用（9..30） |
+
+`since` 现在**不参与判定**（J8 仓只要命中就算违规），它是为多版本扩展准备的数据：
+将来业务仓在 L3 声明 `Java: 17` 时，门禁只需要拦 `since > 17` 的构造（`var` / `record` / text block 都放行）。
+设计见 [ADR 0005](adr/0005-multi-version-rules.md)；`ds check` 断言每条都必须有合法的 `since`。
 
 **加一条要改两处，顺序固定**：
 

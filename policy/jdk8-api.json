@@ -1,10 +1,11 @@
 {
-  "$comment": "JDK 9+ 构造清单（单一事实源）。条目同时用于两处：guard 扫规则示例（ds check）、rule 为 true 的进 J8-MOD-01 的业务代码 deny。两端 pattern 必须逐字一致，ds check 会断言。",
+  "$comment": "JDK 9+ 构造清单（单一事实源）。since = 该构造从哪个版本开始可用，供多版本扩展时按「业务仓声明的 Java 版本」动态判定（见 docs/adr/0005-multi-version-rules.md）。当前 J8-MOD-01 仍然按「命中即违规」处理（J8 仓不需要 since）；guard / rule 两个开关的含义不变。",
   "version": 2,
   "entries": [
     {
       "id": "stream-toList",
       "pattern": "(?<!Collectors)\\.toList\\(\\)",
+      "since": 16,
       "hint": "Stream#toList 是 Java 16+，J8 用 Collectors.toList()",
       "guard": true,
       "rule": true
@@ -12,6 +13,7 @@
     {
       "id": "string-isBlank",
       "pattern": "(?<!StringUtils)\\.isBlank\\(\\)",
+      "since": 11,
       "hint": "String#isBlank 是 Java 11+，J8 用 StringUtils.isBlank",
       "guard": true,
       "rule": true
@@ -19,6 +21,7 @@
     {
       "id": "string-strip",
       "pattern": "(?<!StringUtils)\\.strip\\(\\)",
+      "since": 11,
       "hint": "String#strip 是 Java 11+，J8 用 trim",
       "guard": true,
       "rule": true
@@ -28,11 +31,13 @@
       "pattern": "\\.lines\\(\\)",
       "hint": "String#lines 是 Java 11+",
       "guard": true,
-      "rule": true
+      "rule": true,
+      "since": 11
     },
     {
       "id": "string-repeat",
       "pattern": "\\.repeat\\(\\s*\\d+\\s*\\)",
+      "since": 11,
       "hint": "String#repeat 是 Java 11+",
       "guard": true,
       "rule": true
@@ -40,6 +45,7 @@
     {
       "id": "transfer-to",
       "pattern": "\\.transferTo\\(",
+      "since": 9,
       "hint": "InputStream#transferTo 是 Java 9+，J8 用 IOUtils.copy",
       "guard": true,
       "rule": true
@@ -47,6 +53,7 @@
     {
       "id": "list-of",
       "pattern": "List\\.of\\(",
+      "since": 9,
       "hint": "List.of 是 Java 9+，J8 用 Arrays.asList",
       "guard": true,
       "rule": true
@@ -54,6 +61,7 @@
     {
       "id": "map-of",
       "pattern": "Map\\.of\\(",
+      "since": 9,
       "hint": "Map.of 是 Java 9+，J8 用 Collections.unmodifiableMap",
       "guard": true,
       "rule": true
@@ -61,6 +69,7 @@
     {
       "id": "set-of",
       "pattern": "Set\\.of\\(",
+      "since": 9,
       "hint": "Set.of 是 Java 9+",
       "guard": true,
       "rule": true
@@ -68,6 +77,7 @@
     {
       "id": "list-copyOf",
       "pattern": "List\\.copyOf\\(",
+      "since": 10,
       "hint": "List.copyOf 是 Java 10+",
       "guard": true,
       "rule": true
@@ -75,6 +85,7 @@
     {
       "id": "map-entry",
       "pattern": "Map\\.entry\\(",
+      "since": 9,
       "hint": "Map.entry 是 Java 9+",
       "guard": true,
       "rule": true
@@ -82,6 +93,7 @@
     {
       "id": "files-readString",
       "pattern": "Files\\.readString\\(",
+      "since": 11,
       "hint": "Files#readString 是 Java 11+",
       "guard": true,
       "rule": true
@@ -89,6 +101,7 @@
     {
       "id": "files-writeString",
       "pattern": "Files\\.writeString\\(",
+      "since": 11,
       "hint": "Files#writeString 是 Java 11+",
       "guard": true,
       "rule": true
@@ -96,6 +109,7 @@
     {
       "id": "files-mismatch",
       "pattern": "Files\\.mismatch\\(",
+      "since": 12,
       "hint": "Files#mismatch 是 Java 12+",
       "guard": true,
       "rule": true
@@ -103,6 +117,7 @@
     {
       "id": "var",
       "pattern": "\\bvar\\s+\\w+\\s*=[^=]",
+      "since": 10,
       "hint": "var 是 Java 10+，J8 用显式类型",
       "guard": true,
       "rule": true
@@ -110,6 +125,7 @@
     {
       "id": "record",
       "pattern": "\\brecord\\s+[A-Z]\\w*\\s*\\(",
+      "since": 16,
       "hint": "record 是 Java 16+，J8 用 final 类 + getter",
       "guard": true,
       "rule": true
@@ -117,6 +133,7 @@
     {
       "id": "sealed",
       "pattern": "\\bsealed\\s+(class|interface)",
+      "since": 17,
       "hint": "sealed 是 Java 17+",
       "guard": true,
       "rule": true
@@ -124,6 +141,7 @@
     {
       "id": "string-formatted",
       "pattern": "\\.formatted\\(",
+      "since": 15,
       "hint": "String#formatted 是 Java 15+，J8 用 String.format",
       "guard": true,
       "rule": true
@@ -131,6 +149,7 @@
     {
       "id": "optional-orElseThrow-noarg",
       "pattern": "\\.orElseThrow\\(\\s*\\)",
+      "since": 10,
       "hint": "Optional#orElseThrow() 无参版是 Java 10+",
       "guard": true,
       "rule": true
@@ -138,6 +157,7 @@
     {
       "id": "objects-requireNonNullElse",
       "pattern": "Objects\\.requireNonNullElse\\(",
+      "since": 9,
       "hint": "Objects#requireNonNullElse 是 Java 9+",
       "guard": true,
       "rule": true
@@ -145,6 +165,7 @@
     {
       "id": "objects-requireNonNullElseGet",
       "pattern": "Objects\\.requireNonNullElseGet\\(",
+      "since": 9,
       "hint": "Objects#requireNonNullElseGet 是 Java 9+",
       "guard": true,
       "rule": true
@@ -152,6 +173,7 @@
     {
       "id": "collectors-toUnmodifiable",
       "pattern": "Collectors\\.toUnmodifiable\\w+",
+      "since": 10,
       "hint": "Collectors#toUnmodifiable* 是 Java 10+",
       "guard": true,
       "rule": true
@@ -159,6 +181,7 @@
     {
       "id": "collectors-teeing",
       "pattern": "Collectors\\.teeing\\(",
+      "since": 12,
       "hint": "Collectors#teeing 是 Java 12+",
       "guard": true,
       "rule": true
@@ -166,6 +189,7 @@
     {
       "id": "instanceof-pattern",
       "pattern": "instanceof\\s+[A-Z]\\w*\\s+[a-z]\\w*\\b",
+      "since": 16,
       "hint": "instanceof 模式匹配是 Java 16+",
       "guard": true,
       "rule": true
@@ -173,6 +197,7 @@
     {
       "id": "lambda-var",
       "pattern": "\\(\\s*var\\s+\\w+\\s*\\)\\s*->",
+      "since": 11,
       "hint": "lambda 形参写 var 是 Java 11+",
       "guard": true,
       "rule": true
